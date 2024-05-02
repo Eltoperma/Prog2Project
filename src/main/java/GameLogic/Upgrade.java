@@ -1,3 +1,5 @@
+package GameLogic;
+
 public class Upgrade {
     public Upgrades upUpgrade;
     public Upgrades downUpgrade;

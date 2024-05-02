@@ -1,3 +1,5 @@
+package GameLogic;
+
 public class Position {
     public int x,y;
     Position(int x, int y){

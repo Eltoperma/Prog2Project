@@ -1,17 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 public class GameWindow extends JFrame {
     private int rows = 10; // Initial number of rows
     private int cols = 10; // Initial number of columns
-    private int playerX = 0; // X-Position of the player
-    private int playerY = 0; // Y-Position of the player
+    private int playerX = 0; // X-GameLogic.Position of the player
+    private int playerY = 0; // Y-GameLogic.Position of the player
 
     private int tileSize; // Size of each tile
 
     public GameWindow() {
+        ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
+        setIconImage(icon.getImage());
         setTitle("UDLR Modify");
         setSize(800, 600); // Initial window size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +54,6 @@ public class GameWindow extends JFrame {
 
         updateTileSize(gamePanel); // Initialize tile size
     }
-
     private void updateTileSize(JPanel gamePanel) {
         int width = gamePanel.getWidth();
         int height = gamePanel.getHeight();

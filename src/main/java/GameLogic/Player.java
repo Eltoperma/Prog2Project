@@ -1,3 +1,5 @@
+package GameLogic;
+
 public class Player {
     private Position playerPosition;
     private Upgrade playerUpgrades;
