@@ -1,3 +1,5 @@
+package GameLogic;
+
 public enum Upgrades {
     ONE,
     TWO,
