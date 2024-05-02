@@ -9,11 +9,10 @@ public class GameWindow extends JFrame {
     private int playerX = 0; // X-Position of the player
     private int playerY = 0; // Y-Position of the player
 
-    private int mouseX, mouseY;
     private int tileSize; // Size of each tile
 
     public GameWindow() {
-        setTitle("Game Window");
+        setTitle("UDLR Modify");
         setSize(800, 600); // Initial window size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centers the window
