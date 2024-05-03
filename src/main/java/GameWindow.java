@@ -1,10 +1,9 @@
-import GameLogic.Player;
-import GameLogic.Position;
-import GameLogic.Upgrade;
+import GameLogic.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -94,17 +93,38 @@ public class GameWindow extends JFrame {
         repaint();
     }
 
-    private void drawGameField(Graphics player) {
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                player.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
-            }
-        }
 
-        // Draw the player
-        Position pos = this.player.getPlayerPosition();
-        player.drawImage(this.player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null);
+private void drawGameField(Graphics player) {
+    for (int y = 0; y < rows; y++) {
+        for (int x = 0; x < cols; x++) {
+            player.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        }
     }
+
+    // Draw the player
+    Position pos = this.player.getPlayerPosition();
+    player.drawImage(this.player.getPlayerIMG(), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, null);
+
+    // Draw the rotated upgrade image
+    drawRotatedImage(player, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, 0);
+    drawRotatedImage(player, this.player.getUpgradeIMG(Upgrades.THREE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*0.5);
+    drawRotatedImage(player, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI);
+    drawRotatedImage(player, this.player.getUpgradeIMG(Upgrades.TWO), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*1.5);
+
+}
+
+    private void drawRotatedImage(Graphics g, Image image, int x, int y, int width, int height, double angle) {
+        if (image != null) {
+            Graphics2D g2d = (Graphics2D) g;
+            AffineTransform old = g2d.getTransform(); // Save current transform
+            AffineTransform at = AffineTransform.getTranslateInstance(x + (double) width / 2, y + (double) height / 2);
+            at.rotate(angle, 0, 0); // Rotate around the center of the image
+            g2d.setTransform(at);
+            g2d.drawImage(image, -width / 2, -height / 2, width, height, null); // Draw image
+            g2d.setTransform(old); // Restore previous transform
+        }
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
