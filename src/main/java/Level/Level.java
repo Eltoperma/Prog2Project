@@ -11,6 +11,7 @@ import java.util.Map;
 
 public abstract class Level {
 
+
     public Map<Position, Tile> tiles;               //spielbare Fläche
     public Map<Position, Upgrades> upgrades;
     public int height;                              //inkl. unspielbarer Fläche
@@ -19,7 +20,6 @@ public abstract class Level {
     public void configure() {
 
     }
-
     public void addCheckPattern(){
         for(int x = 0; x < height; x++){
             for(int y = 0; y < width; y++){
@@ -54,4 +54,5 @@ public abstract class Level {
             throw new RuntimeException("Du dummer HS, das war falsch herum >:(");
         }
     }
+
 }
