@@ -20,7 +20,20 @@ public class Level_1 extends Level{
 
     private void configureTiles() {
         tiles.put(new Position(1, 1), new Tile(TileType.WALL));
-        // ...
+
+        tiles.put(new Position(2, 1), new Tile(TileType.WALL));
+
+        tiles.put(new Position(3, 1), new Tile(TileType.WALL));
+
+        tiles.put(new Position(4, 1), new Tile(TileType.WALL));
+
+        tiles.put(new Position(5, 1), new Tile(TileType.WALL));
+
+        tiles.put(new Position(6, 1), new Tile(TileType.WALL));
+
+        tiles.put(new Position(1, 2), new Tile(TileType.WALL));
+
+        tiles.put(new Position(1, 1), new Tile(TileType.WALL));
     }
 
    private void configureUpgrades(){
