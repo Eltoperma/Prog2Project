@@ -1,3 +1,7 @@
+import GameLogic.Player;
+import GameLogic.Position;
+import GameLogic.Upgrade;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 public class GameWindow extends JFrame {
     private int rows = 10; // Initial number of rows
     private int cols = 10; // Initial number of columns
-    private int playerX = 0; // X-GameLogic.Position of the player
-    private int playerY = 0; // Y-GameLogic.Position of the player
 
+    private Position playerPosition = new Position();
+    private Player player = new Player(playerPosition,new Upgrade());
     private int tileSize; // Size of each tile
 
     public GameWindow() {
@@ -64,33 +68,33 @@ public class GameWindow extends JFrame {
     }
 
     private void movePlayer(int keyCode) {
+        Position pos = player.getPlayerPosition();
         switch (keyCode) {
             case KeyEvent.VK_W:
-                if (playerY > 0) {
-                    playerY--;
+                if (pos.y > 0) {
+                    player.setPlayerPosition(new Position(pos.x,pos.y-1));
                 }
                 break;
             case KeyEvent.VK_S:
-                if (playerY < rows - 1) {
-                    playerY++;
+                if (pos.y < rows - 2) {
+                    player.setPlayerPosition(new Position(pos.x,pos.y+1));
                 }
                 break;
             case KeyEvent.VK_A:
-                if (playerX > 0) {
-                    playerX--;
+                if (pos.x > 0) {
+                    player.setPlayerPosition(new Position(pos.x-1,pos.y));
                 }
                 break;
             case KeyEvent.VK_D:
-                if (playerX < cols - 1) {
-                    playerX++;
+                if (pos.x < cols - 2) {
+                    player.setPlayerPosition(new Position(pos.x+1,pos.y));
                 }
                 break;
         }
-        repaint(); // Update the window after the player moves
+        repaint();
     }
 
     private void drawGameField(Graphics player) {
-        // Draw the game field
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 player.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
@@ -98,8 +102,8 @@ public class GameWindow extends JFrame {
         }
 
         // Draw the player
-        player.setColor(Color.DARK_GRAY);
-        player.fillOval(playerX * tileSize, playerY * tileSize, tileSize, tileSize);
+        Position pos = this.player.getPlayerPosition();
+        player.drawImage(this.player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null);
     }
 
     public static void main(String[] args) {
