@@ -1,11 +1,7 @@
 package GameLogic;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 public class Player {
     private Position playerPosition;
@@ -51,17 +47,4 @@ public class Player {
     public Image getPlayerIMG(){
         return new ImageIcon("src/assets/player/player.png").getImage();
     }
-    public Image getUpgradeIMG(Upgrades upgrade) {
-        ImageIcon img;
-        switch (upgrade) {
-            case ONE -> img = new ImageIcon("src/assets/player/upgrades/move1.png");
-            case TWO -> img = new ImageIcon("src/assets/player/upgrades/move2.png");
-            case THREE -> img = new ImageIcon("src/assets/player/upgrades/move3.png");
-            case NONE -> img = new ImageIcon("src/assets/player/upgrades/empty.png");
-            case PLACEHOLDER -> img = new ImageIcon("src/assets/player/upgrades/placeholder.png");
-            default -> throw new RuntimeException("Error getting upgrade");
-        }
-        return img.getImage();
-    }
-
 }
