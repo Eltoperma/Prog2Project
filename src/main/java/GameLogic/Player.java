@@ -1,7 +1,11 @@
 package GameLogic;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class Player {
     private Position playerPosition;
@@ -59,4 +63,5 @@ public class Player {
         }
         return img.getImage();
     }
+
 }

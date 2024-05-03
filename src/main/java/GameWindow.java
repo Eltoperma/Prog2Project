@@ -1,12 +1,12 @@
 import GameLogic.*;
 
+import javax.print.attribute.standard.Media;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
+
 
 public class GameWindow extends JFrame {
     private int rows = 10; // Initial number of rows
@@ -124,11 +124,15 @@ private void drawGameField(Graphics player) {
             g2d.setTransform(old); // Restore previous transform
         }
     }
+    public static void playAlternatingBackgroundMusic() {
+        
+    }
 
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GameWindow window = new GameWindow();
+
             window.setVisible(true);
         });
     }
