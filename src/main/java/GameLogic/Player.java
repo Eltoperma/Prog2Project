@@ -1,5 +1,8 @@
 package GameLogic;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Player {
     private Position playerPosition;
     private Upgrade playerUpgrades;
@@ -40,5 +43,8 @@ public class Player {
     }
     public Position getPlayerPosition(){
         return playerPosition;
+    }
+    public Image getPlayerIMG(){
+        return new ImageIcon("src/assets/player/player.png").getImage();
     }
 }
