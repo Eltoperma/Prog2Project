@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 
 public class GameWindow extends JFrame {
     private int rows = 10; // Initial number of rows

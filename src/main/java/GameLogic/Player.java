@@ -41,4 +41,8 @@ public class Player {
     public Position getPlayerPosition(){
         return playerPosition;
     }
+
+    public void move(){
+
+    }
 }
