@@ -16,6 +16,8 @@ public abstract class Level {
     public Map<Position, Upgrades> upgrades;
     public int height;                              //inkl. unspielbarer Fläche
     public int width;                               //inkl. unspielbarer Fläche
+    public Position startingPosition;
+    public Position finishPosition;
 
     public void configure() {
 
