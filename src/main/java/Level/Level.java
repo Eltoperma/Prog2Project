@@ -57,4 +57,11 @@ public abstract class Level {
         }
     }
 
+    public boolean isPlayable(Position pos){
+        if(tiles.get(pos).getTileType() == TileType.DARK || tiles.get(pos).getTileType() == TileType.LIGHT){
+            return true;
+        }
+        return false;
+    }
+
 }
