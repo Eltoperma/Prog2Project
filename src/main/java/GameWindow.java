@@ -116,6 +116,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -129,14 +130,9 @@ public class GameWindow extends JFrame {
         super("Game Window");
 
         try {
-            // Initialize the playlist with URLs of songs
-            playlist[0] = new URL("file:///C:/Users/thueter/IdeaProjects/Prog2Project/src/assets/sounds/music/crystaline.mp3");
-            playlist[1] = new URL("file:///C:/Users/thueter/IdeaProjects/Prog2Project/src/assets/sounds/music/modify_my_brain.mp3");
-
-            // Initialize the background music player with the first song
-            backgroundMusicPlayer = new MP3Player(playlist[currentSongIndex]);
+            backgroundMusicPlayer = new MP3Player(getSongUrls());
             backgroundMusicPlayer.setRepeat(true); // Loop the background music
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -175,7 +171,25 @@ public class GameWindow extends JFrame {
             }
         }).start();
     }
-
+    private URL[] getSongUrls(){
+        String basePath = System.getProperty("user.dir");
+        String relativePathSong1 = "/src/assets/sounds/music/crystaline.mp3";
+        String relativePathSong2 = "/src/assets/sounds/music/modify_my_brain.mp3";
+        File song1 = new File(basePath  + relativePathSong1);
+        File song2 = new File(basePath + relativePathSong2);
+        URL[] urls = new URL[2];
+        URL fileURL = null;
+        try{
+            fileURL = song1.toURI().toURL();
+            urls[0] = fileURL;
+            fileURL = song2.toURI().toURL();
+            urls[1] = fileURL;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return urls;
+    }
     private void toggleMusic() {
         if (backgroundMusicPlayer.isPaused()) {
             backgroundMusicPlayer.play();
