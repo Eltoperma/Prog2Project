@@ -7,10 +7,13 @@ public class Game {
     static Level currentlevel;
 
     public Game(){
-        player = new Player(currentlevel.startingPosition, new Upgrade());
     }
 
     public void setCurrentLevel(Level level){
         this.currentlevel = level;
+    }
+
+    public void addPlayer(){
+        player = new Player(currentlevel.startingPosition, new Upgrade());
     }
 }

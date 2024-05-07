@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Levels {
     public ArrayList<Level> levelList;
     public Levels(){
+        levelList = new ArrayList<>();
         levelList.add(new Level_1());
        //levels.add(...)
     }

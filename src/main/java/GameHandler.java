@@ -15,5 +15,6 @@ public class GameHandler {
         levelList = levels.levelList;
         game = new Game();
         game.setCurrentLevel(new Level_1());
+        game.addPlayer();
     }
 }
