@@ -27,4 +27,8 @@ public class Tile {
         }
         return img.getImage();
     }
+
+    public TileType getTileType() {
+        return tile;
+    }
 }
