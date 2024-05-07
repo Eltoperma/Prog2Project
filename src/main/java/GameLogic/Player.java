@@ -1,6 +1,9 @@
 package GameLogic;
 
+import javax.swing.*;
+import java.awt.*;
 import AssetManager.TileType;
+
 
 public class Player {
     private Position playerPosition;
@@ -46,6 +49,21 @@ public class Player {
     public Position getPlayerPosition(){
         return playerPosition;
     }
+
+    public Image getPlayerIMG(){
+        return new ImageIcon("src/assets/player/player.png").getImage();
+    }
+    public Image getUpgradeIMG(Upgrades up){
+        switch(up){
+            case ONE -> {return new ImageIcon("src/assets/player/upgrades/move1.png").getImage();}
+            case TWO -> {
+                return new ImageIcon("src/assets/player/upgrades/move2.png").getImage();
+            }
+            case THREE -> {return new ImageIcon("src/assets/player/upgrades/move3.png").getImage();}
+            case NONE -> {return new ImageIcon("src/assets/player/upgrades/empty.png").getImage();}
+            case PLACEHOLDER -> {return new ImageIcon("src/assets/player/upgrades/placeholder.png").getImage();}
+            default -> throw new RuntimeException();
+
 
     public void move(Direction direction){
         switch (direction){
