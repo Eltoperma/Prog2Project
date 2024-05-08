@@ -8,31 +8,38 @@ import java.awt.*;
 public class Player {
     private Position playerPosition;
     private Upgrade playerUpgrades;
-    public Player(Position position, Upgrade upgrades){
+
+    public Player(Position position, Upgrade upgrades) {
         playerPosition = position;
         playerUpgrades = upgrades;
     }
-    public boolean hasPlayerUpgradeOnDirection(Direction direction){
+
+    public boolean hasPlayerUpgradeOnDirection(Direction direction) {
         boolean state = false;
-        switch (direction){
+        switch (direction) {
             case UP -> {
-               if(playerUpgrades.upUpgrade == Upgrades.NONE) state = true;
+                if (playerUpgrades.upUpgrade != Upgrades.NONE) state = true;
             }
             case DOWN -> {
-                if(playerUpgrades.downUpgrade == Upgrades.NONE) state = true;
+                if (playerUpgrades.downUpgrade != Upgrades.NONE) state = true;
             }
             case RIGHT -> {
-                if(playerUpgrades.rightUpgrade == Upgrades.NONE) state = true;
+                if (playerUpgrades.rightUpgrade != Upgrades.NONE) state = true;
             }
             case LEFT -> {
-                if(playerUpgrades.leftUpgrade == Upgrades.NONE) state = true;
+                if (playerUpgrades.leftUpgrade != Upgrades.NONE) state = true;
             }
         }
         return state;
     }
-    public void setPlayerUpgradeOnDirection(Direction direction, Upgrades upgrade){
-        if(!hasPlayerUpgradeOnDirection(direction)){
-            switch (direction){
+
+    public boolean hasAllUpgrades() {
+        return playerUpgrades.downUpgrade != Upgrades.NONE && playerUpgrades.upUpgrade != Upgrades.NONE && playerUpgrades.leftUpgrade != Upgrades.NONE && playerUpgrades.rightUpgrade != Upgrades.NONE;
+    }
+
+    public void setPlayerUpgradeOnDirection(Direction direction, Upgrades upgrade) {
+        if (!hasPlayerUpgradeOnDirection(direction)) {
+            switch (direction) {
                 case UP -> playerUpgrades.upUpgrade = upgrade;
                 case DOWN -> playerUpgrades.downUpgrade = upgrade;
                 case RIGHT -> playerUpgrades.rightUpgrade = upgrade;
@@ -43,10 +50,12 @@ public class Player {
             }
         }
     }
-    public void setPlayerPosition(Position pos){
+
+    public void setPlayerPosition(Position pos) {
         playerPosition = pos;
     }
-    public Position getPlayerPosition(){
+
+    public Position getPlayerPosition() {
         return playerPosition;
     }
 
@@ -74,22 +83,19 @@ public class Player {
         }
     }
 
-
     public void move(Direction direction){
         switch (direction){
             case UP -> moveUp(direction);
             case DOWN -> moveDown(direction);
             case LEFT -> moveLeft(direction);
             case RIGHT -> moveRight(direction);
-            default -> {
-                throw new RuntimeException("Fehler bei Move!");
-            }
+            default -> throw new RuntimeException("Fehler bei Move!");
         }
     }
 
-    public void moveUp(Direction direction){
+    private void moveUp(Direction direction) {
         int movingFactor;
-        switch(playerUpgrades.upUpgrade){
+        switch (playerUpgrades.upUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -97,9 +103,9 @@ public class Player {
         adjustPosition(0, -movingFactor, direction);
     }
 
-    public void moveLeft(Direction direction){
+    private void moveLeft(Direction direction) {
         int movingFactor;
-        switch(playerUpgrades.upUpgrade){
+        switch (playerUpgrades.upUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -107,9 +113,9 @@ public class Player {
         adjustPosition(-movingFactor, 0, direction);
     }
 
-    public void moveRight(Direction direction){
+    private void moveRight(Direction direction) {
         int movingFactor;
-        switch(playerUpgrades.upUpgrade){
+        switch (playerUpgrades.upUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -117,9 +123,9 @@ public class Player {
         adjustPosition(movingFactor, 0, direction);
     }
 
-    public void moveDown(Direction direction){
+    private void moveDown(Direction direction) {
         int movingFactor;
-        switch(playerUpgrades.upUpgrade){
+        switch (playerUpgrades.upUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -127,30 +133,48 @@ public class Player {
         adjustPosition(0, movingFactor, direction);
     }
 
-    public void adjustPosition(int x, int y, Direction direction){
-        Position landOnPosition = new Position(playerPosition.x + x, playerPosition.y + y);
+    public void adjustPosition(int xDiff, int yDiff, Direction direction) {
+        Position landOnPosition = new Position((playerPosition.x + xDiff), (playerPosition.y + yDiff));
 
-        if(Game.currentlevel.isPlayable(landOnPosition)){
+        System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
+        if (Game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
-             if(Game.currentlevel.upgrades.get(landOnPosition) == null){
-                 setPlayerPosition(landOnPosition);
-                 return;
+            if (Game.currentlevel.upgrades.get(landOnPosition) == null) {
+                System.out.println("noUpgrade");
+                setPlayerPosition(landOnPosition);
+                return;
             }
-             //landing Position contains upgrade and is collectable
-             if(Game.currentlevel.upgrades.get(landOnPosition) != null && !hasPlayerUpgradeOnDirection(direction)){
+            //landing Position contains upgrade and is collectable
+            if (Game.currentlevel.upgrades.get(landOnPosition) != null && !hasPlayerUpgradeOnDirection(direction)) {
+                System.out.println("collectUpgrade");
                 collectUpgrade(direction, landOnPosition);
-             }
+                setPlayerPosition(landOnPosition);
+                return;
+            }
+
+            if (Game.currentlevel.tiles.get(landOnPosition).getTileType().equals(TileType.GOAL)) {
+                if(canFinish()){
+                    Game.finish();
+                };
+            }
+            throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht. Vllt ein Upgrade.");
+
         }
         throw new RuntimeException("Dort kann man sich nicht hinbewegen!");
     }
 
     private void collectUpgrade(Direction direction, Position pos) {
-        switch(direction){
+        switch (direction) {
             case UP -> playerUpgrades.upUpgrade = Game.currentlevel.upgrades.get(pos);
             case LEFT -> playerUpgrades.leftUpgrade = Game.currentlevel.upgrades.get(pos);
             case RIGHT -> playerUpgrades.rightUpgrade = Game.currentlevel.upgrades.get(pos);
             case DOWN -> playerUpgrades.downUpgrade = Game.currentlevel.upgrades.get(pos);
             default -> throw new RuntimeException("Invalides Upgrade!");
         }
+        Game.currentlevel.upgrades.remove(pos);
+    }
+
+    public boolean canFinish(){
+        return hasAllUpgrades();
     }
 }

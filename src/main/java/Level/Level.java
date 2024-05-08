@@ -20,24 +20,26 @@ public abstract class Level {
     public Position finishPosition;
 
     public void configure() {
-
     }
     public void addCheckPattern(){
         for(int x = 0; x < height; x++){
             for(int y = 0; y < width; y++){
-                if(tiles.get(new Position(x, y)).getTileType().equals(TileType.STANDARD)){
+                // Überprüfen, ob die Position in der Karte existiert
+                Position position = new Position(x, y);
+                if(tiles.containsKey(position) && tiles.get(position).getTileType().equals(TileType.STANDARD)){
                     if(y % 2 == 0) {
-                        if (x % 2 == 0) tiles.put(new Position(x, y), new Tile(TileType.DARK));
-                        else tiles.put(new Position(x, y), new Tile(TileType.LIGHT));
+                        if (x % 2 == 0) tiles.put(position, new Tile(TileType.DARK));
+                        else tiles.put(position, new Tile(TileType.LIGHT));
                     }
                     else{
-                        if (x % 2 != 0) tiles.put(new Position(x, y), new Tile(TileType.DARK));
-                        else tiles.put(new Position(x, y), new Tile(TileType.LIGHT));
+                        if (x % 2 != 0) tiles.put(position, new Tile(TileType.DARK));
+                        else tiles.put(position, new Tile(TileType.LIGHT));
                     }
                 }
             }
         }
     }
+
 
     public void drawLineOfWalls(Position start, Position end){
         if(start.x <= end.x && start.y <= end.y) {
@@ -48,7 +50,7 @@ public abstract class Level {
             }
             else if (start.y != end.y) {
                 for (int i = start.y; i <= end.y; i++) {
-                    tiles.put(new Position(i, start.x), new Tile(TileType.WALL));
+                    tiles.put(new Position(start.x, i), new Tile(TileType.WALL));
                 }
             }
         }
@@ -58,10 +60,17 @@ public abstract class Level {
     }
 
     public boolean isPlayable(Position pos){
-        if(tiles.get(pos).getTileType() == TileType.DARK || tiles.get(pos).getTileType() == TileType.LIGHT){
-            return true;
+        Position newPos = new Position(pos.x, pos.y);
+        if(tiles.containsKey(newPos)){
+            return tiles.get(newPos).getTileType().equals(TileType.DARK) || tiles.get(newPos).getTileType().equals(TileType.LIGHT) || tiles.get(newPos).getTileType().equals(TileType.GOAL);
         }
-        return false;
+        throw new RuntimeException("Diese Position existiert nicht!?");
+    }
+
+    public void test(){
+        tiles.forEach((position, tile) -> {
+            System.out.println("Position : " + position.x + " " + position.y + " Tile: " + tile.getTileType());
+        });
     }
 
 }
