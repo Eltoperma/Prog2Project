@@ -1,3 +1,4 @@
+import AssetManager.MapUpgrade;
 import AssetManager.Tile;
 import GameLogic.Direction;
 import GameLogic.Game;
@@ -17,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.io.File;
 
 
+import java.util.HashMap;
 import java.util.Map;
 import java.net.URL;
 
@@ -26,12 +28,13 @@ public class GameWindow extends JFrame {
     Game game;
     public Map<Position, Tile> tiles;               //spielbare Fläche
     public Map<Position, Upgrades> upgrades;
-    private int rows = 10; // Initial number of rows
-    private int cols = 10; // Initial number of columns
+
+    private int rows;
+    private int cols;
     private Player player;
-    private int playerX = 0; // X-GameLogic.Position of the player
-    private int playerY = 0; // Y-GameLogic.Position of the player
-    private int tileSize; // Size of each tile
+    private int playerX;
+    private int playerY;
+    private int tileSize;
 
     private MP3Player backgroundMusicPlayer;
 
@@ -49,8 +52,9 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
 
 
-        fetchDataFromGame();
         player = new Player(new Position(0,0),new Upgrade());
+        fetchDataFromGame();
+
         try {
             backgroundMusicPlayer = new MP3Player(getSongs());
             backgroundMusicPlayer.setRepeat(true); // Loop the background music
@@ -100,9 +104,12 @@ public class GameWindow extends JFrame {
         playerX = Game.getPlayer().getPlayerPosition().x;
         System.out.println("Pos: " + Game.getPlayer().getPlayerPosition() + " x " + Game.getPlayer().getPlayerPosition().x + " y " + Game.getPlayer().getPlayerPosition().y);
         playerY = Game.getPlayer().getPlayerPosition().y;
-
+        this.player.setPlayerPosition(new Position(playerX,playerY));
         tiles = Game.getCurrentlevel().tiles;
         upgrades = Game.getCurrentlevel().upgrades;
+    }
+    private void updatePlayerData(){
+        player = Game.getPlayer();
     }
 
     private void updateTileSize(JPanel gamePanel) {
@@ -203,25 +210,27 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
         }
+        updatePlayerData();
         player.setPlayerPosition(new Position(playerX,playerY));
         repaint();
     }
 
     private void drawGameField(Graphics graphics) {
+        Map<Position, Upgrades> upgrades = Game.currentlevel.upgrades;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-
-                graphics.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
-
+                graphics.drawImage(tiles.get(new Position(x,y)).getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null);
+                if(upgrades.get(new Position(x,y)) == null) continue;
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize,y*tileSize,tileSize,tileSize,null);
             }
         }
 
         Position pos = this.player.getPlayerPosition();
         graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null);
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, 0); //Upgrade 1
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*0.5); //Upgrade 2
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI); //Upgrade 3
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(Upgrades.NONE), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*1.5); //Upgrade 4
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, 0); //Upgrade Up
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*0.5); //Upgrade Right
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI); //Upgrade Down
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*1.5); //Upgrade Left
 
     }
 

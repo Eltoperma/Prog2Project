@@ -9,6 +9,11 @@ import java.awt.*;
 
 public class Player {
     private Position playerPosition;
+
+    public Upgrade getPlayerUpgrades() {
+        return playerUpgrades;
+    }
+
     private Upgrade playerUpgrades;
 
     public Player(Position position, Upgrade upgrades) {
