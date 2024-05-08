@@ -13,9 +13,9 @@ public class GameHandler {
     static Game game;
     static int levelNo;
 
-    private GameHandler(){
-
-    }
+//    private GameHandler(){
+//
+//    }
     public static void init(){
         System.out.println("init");
 
@@ -50,5 +50,7 @@ public class GameHandler {
 
     public static void nextGame(){
         levelNo++;
+        //ladebildschirm
+        Game.setCurrentLevel(Levels.getLevel(levelNo-1));
     }
 }

@@ -59,6 +59,34 @@ public abstract class Level {
         }
     }
 
+    public void drawLineOfStandards(Position start, Position end){
+        if(start.x <= end.x && start.y <= end.y) {
+            if (start.x != end.x) {
+                for (int i = start.x; i <= end.x; i++) {
+                    tiles.put(new Position(i, start.y), new Tile(TileType.STANDARD));
+                }
+            }
+            else if (start.y != end.y) {
+                for (int i = start.y; i <= end.y; i++) {
+                    tiles.put(new Position(start.x, i), new Tile(TileType.STANDARD));
+                }
+            }
+        }
+        else{
+            throw new RuntimeException("Du dummer HS, das war falsch herum >:(");
+        }
+    }
+
+    public void fillWithStandards(Position start, Position end){
+        for(int y = start.x; y <= end.y; y++){
+            for(int x = start.x; x <= end.x; x++) {
+                if (tiles.get(new Position(x, y)) != null && !tiles.get(new Position(x, y)).getTileType().equals(TileType.NOTHING) && !tiles.get(new Position(x, y)).getTileType().equals(TileType.WALL)){
+                    tiles.put(new Position(x, y), new Tile(TileType.STANDARD));
+                }
+            }
+        }
+    }
+
     public boolean isPlayable(Position pos){
         Position newPos = new Position(pos.x, pos.y);
         if(tiles.containsKey(newPos)){
