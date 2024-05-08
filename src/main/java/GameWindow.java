@@ -52,7 +52,9 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
 
 
+
         player = new Player(new Position(0,0),new Upgrade());
+
         fetchDataFromGame();
 
         try {
@@ -101,6 +103,7 @@ public class GameWindow extends JFrame {
 //        game = GameHandler.getGame();
         rows = Game.getCurrentlevel().height;
         cols = Game.getCurrentlevel().width;
+        player = Game.getPlayer();
         playerX = Game.getPlayer().getPlayerPosition().x;
         System.out.println("Pos: " + Game.getPlayer().getPlayerPosition() + " x " + Game.getPlayer().getPlayerPosition().x + " y " + Game.getPlayer().getPlayerPosition().y);
         playerY = Game.getPlayer().getPlayerPosition().y;
