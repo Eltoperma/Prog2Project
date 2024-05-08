@@ -32,5 +32,6 @@ public class Game {
 
     public static void finish(){
 //        GameHandler.nextGame();
+        System.out.println("Win du wichser");
     }
 }

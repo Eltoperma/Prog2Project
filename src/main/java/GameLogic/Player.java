@@ -102,6 +102,7 @@ public class Player {
 
     private void moveUp(Direction direction) {
         int movingFactor;
+        System.out.println("UpUpgrade: " + playerUpgrades.upUpgrade);
         switch (playerUpgrades.upUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
@@ -112,7 +113,7 @@ public class Player {
 
     private void moveLeft(Direction direction) {
         int movingFactor;
-        switch (playerUpgrades.upUpgrade) {
+        switch (playerUpgrades.leftUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -122,7 +123,7 @@ public class Player {
 
     private void moveRight(Direction direction) {
         int movingFactor;
-        switch (playerUpgrades.upUpgrade) {
+        switch (playerUpgrades.rightUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -132,7 +133,7 @@ public class Player {
 
     private void moveDown(Direction direction) {
         int movingFactor;
-        switch (playerUpgrades.upUpgrade) {
+        switch (playerUpgrades.downUpgrade) {
             case TWO -> movingFactor = 2;
             case THREE -> movingFactor = 3;
             default -> movingFactor = 1;
@@ -146,7 +147,7 @@ public class Player {
         System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
         if (Game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
-            if (Game.currentlevel.upgrades.get(landOnPosition) == null) {
+            if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).getTileType().equals(TileType.GOAL)) {
                 System.out.println("noUpgrade");
                 setPlayerPosition(landOnPosition);
                 return;
@@ -160,8 +161,12 @@ public class Player {
             }
 
             if (Game.currentlevel.tiles.get(landOnPosition).getTileType().equals(TileType.GOAL)) {
+                System.out.println("finish?");
                 if(canFinish()){
+                    System.out.println("finish!");
+                    Game.getPlayer().setPlayerPosition(landOnPosition);
                     Game.finish();
+                    return;
                 };
             }
             throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht. Vllt ein Upgrade.");

@@ -30,10 +30,10 @@ public class Level_1 extends Level {
         tiles = new HashMap<>();
         //user input
 
-        drawLineOfWalls(new Position(0, 0), new Position(9, 1));
-        drawLineOfWalls(new Position(0, 9), new Position(9, 9));
-        drawLineOfWalls(new Position(0, 1), new Position(0, 8));
-        drawLineOfWalls(new Position(9, 1), new Position(9, 8));
+        drawLineOfWalls(new Position(1, 1), new Position(8, 1));
+        drawLineOfWalls(new Position(1, 8), new Position(8, 8));
+        drawLineOfWalls(new Position(1, 1), new Position(1, 8));
+        drawLineOfWalls(new Position(8, 1), new Position(8, 8));
 
         fillWithStandards(new Position(2, 2), new Position(7, 7));
 
@@ -49,10 +49,10 @@ public class Level_1 extends Level {
     private void configureUpgrades() {
         //user input
         upgrades = new HashMap<>();
-        upgrades.put(new Position(2, 2), Upgrades.ONE);
+        upgrades.put(new Position(2, 2), Upgrades.TWO);
         upgrades.put(new Position(2, 7), Upgrades.ONE);
-        upgrades.put(new Position(6, 3), Upgrades.THREE);
-        upgrades.put(new Position(6, 6), Upgrades.TWO);
+        upgrades.put(new Position(7, 2), Upgrades.THREE);
+        upgrades.put(new Position(7, 7), Upgrades.TWO);
 
         //
     }
