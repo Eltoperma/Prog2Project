@@ -38,31 +38,23 @@ public class GameWindow extends JFrame {
         //set Window title
         setTitle("UDLR Modify");
         // Initial window size
-        setSize(800, 600);
+        setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Centers the window
         setLocationRelativeTo(null);
-
-
-
+        //Local instance of the player Object
         player = new Player(new Position(0,0),new Upgrade());
-
+        //loads Level Data
         fetchDataFromGame();
-
-        try {
-            backgroundMusicPlayer = new MP3Player(getSongs());
-            backgroundMusicPlayer.setRepeat(true); // Loop the background music
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        //setup Backgroundmusic
+        backgroundMusicPlayer = new MP3Player(getSongs());
+        backgroundMusicPlayer.setRepeat(true);
         JPanel gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawGameField(g);
             }
-
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(cols * tileSize, rows * tileSize);
