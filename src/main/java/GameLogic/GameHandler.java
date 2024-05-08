@@ -1,4 +1,6 @@
-import GameLogic.Game;
+package GameLogic;
+
+import DrawLogic.GameWindow;
 import Level.*;
 import javax.swing.*;
 
@@ -13,9 +15,6 @@ public class GameHandler {
     static Game game;
     static int levelNo;
 
-//    private GameHandler(){
-//
-//    }
     public static void init(){
         System.out.println("init");
 

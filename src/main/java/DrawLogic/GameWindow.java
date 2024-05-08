@@ -1,13 +1,7 @@
-import AssetManager.MapUpgrade;
-import AssetManager.Tile;
-import GameLogic.Direction;
-import GameLogic.Game;
+package DrawLogic;
 
 
-import GameLogic.Player;
-import GameLogic.Position;
-import GameLogic.Upgrade;
-import GameLogic.Upgrades;
+import GameLogic.*;
 import jaco.mp3.player.MP3Player;
 
 
@@ -17,8 +11,6 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 
-
-import java.util.HashMap;
 import java.util.Map;
 import java.net.URL;
 

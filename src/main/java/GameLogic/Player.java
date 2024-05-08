@@ -1,6 +1,6 @@
 package GameLogic;
 
-import AssetManager.TileType;
+import DrawLogic.TileType;
 
 import javax.swing.*;
 import java.awt.*;

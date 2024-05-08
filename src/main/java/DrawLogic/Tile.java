@@ -1,4 +1,4 @@
-package AssetManager;
+package DrawLogic;
 
 import javax.swing.*;
 import java.awt.*;
