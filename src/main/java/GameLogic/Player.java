@@ -1,5 +1,7 @@
 package GameLogic;
 
+import AssetManager.TileType;
+
 import javax.swing.*;
 import java.awt.*;
 

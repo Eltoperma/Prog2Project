@@ -22,6 +22,8 @@ public class GameHandler {
         levelNo = 1;
 //        game = new Game();
 
+        new Levels();
+
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
         Game.setCurrentLevel(level);

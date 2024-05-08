@@ -10,7 +10,7 @@ public class Levels {
        //levels.add(...)
     }
     public static Level getLevel(Integer level){
-        if(level >= levelList.size() || level < 0) throw new RuntimeException("Out of Range exeption");
+        if(level >= levelList.size() || level < 0) throw new RuntimeException("Out of Range exception");
         return levelList.get(level);
     }
 
