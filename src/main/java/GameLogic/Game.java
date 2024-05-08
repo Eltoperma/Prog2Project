@@ -31,6 +31,6 @@ public class Game {
     }
 
     public static void finish(){
-
+//        GameHandler.nextGame();
     }
 }
