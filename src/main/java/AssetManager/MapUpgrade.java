@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public  class MapUpgrade {
-    public Image getImage(Upgrades upgrade){
+    public static Image getImage(Upgrades upgrade){
         ImageIcon img;
         switch (upgrade){
             case ONE -> {
