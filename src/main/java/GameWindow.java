@@ -50,7 +50,7 @@ public class GameWindow extends JFrame {
 
 
         fetchDataFromGame();
-        player = new Player(new Position(0,0),new Upgrade());
+
         try {
             backgroundMusicPlayer = new MP3Player(getSongs());
             backgroundMusicPlayer.setRepeat(true); // Loop the background music
@@ -97,6 +97,7 @@ public class GameWindow extends JFrame {
 //        game = GameHandler.getGame();
         rows = Game.getCurrentlevel().height;
         cols = Game.getCurrentlevel().width;
+        player = Game.getPlayer();
         playerX = Game.getPlayer().getPlayerPosition().x;
         System.out.println("Pos: " + Game.getPlayer().getPlayerPosition() + " x " + Game.getPlayer().getPlayerPosition().x + " y " + Game.getPlayer().getPlayerPosition().y);
         playerY = Game.getPlayer().getPlayerPosition().y;
