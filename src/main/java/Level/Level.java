@@ -1,9 +1,8 @@
 package Level;
 
-import AssetManager.Tile;
-import AssetManager.TileType;
+import DrawLogic.Tile;
+import DrawLogic.TileType;
 import GameLogic.Position;
-import GameLogic.Upgrade;
 import GameLogic.Upgrades;
 
 

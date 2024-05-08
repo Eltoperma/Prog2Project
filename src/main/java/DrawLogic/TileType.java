@@ -1,4 +1,4 @@
-package AssetManager;
+package DrawLogic;
 
 public enum TileType {
     NOTHING,
