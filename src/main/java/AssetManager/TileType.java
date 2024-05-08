@@ -5,5 +5,6 @@ public enum TileType {
     DARK,
     LIGHT,
     WALL,
-    STANDARD
+    STANDARD,
+    GOAL
 }
