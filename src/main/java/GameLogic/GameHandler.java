@@ -44,6 +44,7 @@ public class GameHandler {
         Game.setCurrentLevel(level);
 
         Game.addPlayer();
+
     }
 
     public static Levels getLevels() {
@@ -63,6 +64,7 @@ public class GameHandler {
             levelNo++;
             //ladebildschirm
             GameHandler.initLvl();
+
         }
     }
 
