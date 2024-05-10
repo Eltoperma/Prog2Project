@@ -6,6 +6,7 @@ public class Levels {
     public static ArrayList<Level> levelList;
     public Levels(){
         levelList = new ArrayList<>();
+        levelList.add(new Level_1());
         levelList.add(new Level_Test());
        //levels.add(...)
     }
