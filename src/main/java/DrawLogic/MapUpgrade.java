@@ -28,4 +28,7 @@ public  class MapUpgrade {
         }
         return img.getImage();
     }
+    public static Image getImage(){
+        return  new ImageIcon("src/assets/upgrades/upgrade_shadow.png").getImage();
+    }
 }

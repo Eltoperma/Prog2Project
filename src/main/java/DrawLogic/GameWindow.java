@@ -38,31 +38,23 @@ public class GameWindow extends JFrame {
         //set Window title
         setTitle("UDLR Modify");
         // Initial window size
-        setSize(800, 600);
+        setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // Centers the window
         setLocationRelativeTo(null);
-
-
-
+        //Local instance of the player Object
         player = new Player(new Position(0,0),new Upgrade());
-
+        //loads Level Data
         fetchDataFromGame();
-
-        try {
-            backgroundMusicPlayer = new MP3Player(getSongs());
-            backgroundMusicPlayer.setRepeat(true); // Loop the background music
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        //setup Backgroundmusic
+        backgroundMusicPlayer = new MP3Player(getSongs());
+        backgroundMusicPlayer.setRepeat(true);
         JPanel gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawGameField(g);
             }
-
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(cols * tileSize, rows * tileSize);
@@ -211,21 +203,24 @@ public class GameWindow extends JFrame {
     }
 
     private void drawGameField(Graphics graphics) {
+       int shadowOffsetx = 0;
+       int shadowOffsety = 10;
         Map<Position, Upgrades> upgrades = Game.currentlevel.upgrades;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                graphics.drawImage(tiles.get(new Position(x,y)).getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null);
+                graphics.drawImage(tiles.get(new Position(x,y)).getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null); //draw Tile
                 if(upgrades.get(new Position(x,y)) == null) continue;
-                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize,y*tileSize,tileSize,tileSize,null);
+                graphics.drawImage(MapUpgrade.getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null); //draw Upgradeshadow
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffsetx,y*tileSize-shadowOffsety,tileSize,tileSize,null);//draw Upgrade
             }
         }
 
         Position pos = this.player.getPlayerPosition();
-        graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null);
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, 0); //Upgrade Up
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*0.5); //Upgrade Right
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI); //Upgrade Down
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, Math.PI*1.5); //Upgrade Left
+        graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null); //draw player
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety,tileSize , tileSize, 0); //Upgrade Up
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI*0.5); //Upgrade Right
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI); //Upgrade Down
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI*1.5); //Upgrade Left
 
     }
 
