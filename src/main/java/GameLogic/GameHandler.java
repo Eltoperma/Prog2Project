@@ -13,12 +13,10 @@ public class GameHandler {
     static Levels levels;
     static ArrayList<Level> levelList;
     static Game game;
-    static int levelNo;
+    static int levelNo = 1;
 
     public static void init(){
         System.out.println("init");
-
-        levelNo = 1;
 //        game = new Game();
 
         new Levels();
@@ -35,6 +33,19 @@ public class GameHandler {
         });
     }
 
+    public static void initLvl(){
+        System.out.println("init");
+//        game = new Game();
+
+        new Levels();
+
+        Level level = Levels.getLevel(levelNo - 1);
+        level.configure();
+        Game.setCurrentLevel(level);
+
+        Game.addPlayer();
+    }
+
     public static Levels getLevels() {
         return levels;
     }
@@ -48,8 +59,17 @@ public class GameHandler {
     }
 
     public static void nextGame(){
-        levelNo++;
-        //ladebildschirm
-        Game.setCurrentLevel(Levels.getLevel(levelNo-1));
+        if(levelNo < Levels.levelList.size()) {
+            levelNo++;
+            //ladebildschirm
+            GameHandler.initLvl();
+        }
+    }
+
+    public static void lastGame(){
+        if(levelNo > 0){
+            levelNo--;
+            Game.setCurrentLevel(Levels.getLevel(levelNo - 1));
+        }
     }
 }

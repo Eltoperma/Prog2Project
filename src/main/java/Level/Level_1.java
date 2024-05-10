@@ -13,9 +13,9 @@ public class Level_1 extends Level {
     public void configure() {
 
         //user input
-        height = 10;
-        width = 10;
-        startingPosition = new Position(3, 3);
+        height = 8;
+        width = 8;
+        startingPosition = new Position(4, 5);
         //
 
         configureTiles();
@@ -29,29 +29,31 @@ public class Level_1 extends Level {
         tiles = new HashMap<>();
         //user input
 
-        drawLineOfWalls(new Position(1, 1), new Position(8, 1));
-        drawLineOfWalls(new Position(1, 8), new Position(8, 8));
-        drawLineOfWalls(new Position(1, 1), new Position(1, 8));
-        drawLineOfWalls(new Position(8, 1), new Position(8, 8));
 
-        fillWithStandards(new Position(2, 2), new Position(7, 7));
+        //Horizontal
+        drawLineOfWalls(new Position(1, 1), new Position(5, 1));
+        drawLineOfWalls(new Position(1, 5), new Position(3, 5));
+        drawLineOfWalls(new Position(3, 6), new Position(5, 6));
 
-        tiles.put(new Position(7, 3), new Tile(TileType.WALL));
-        tiles.put(new Position(6, 4), new Tile(TileType.WALL));
-        tiles.put(new Position(7, 5), new Tile(TileType.WALL));
+        //Vertikal
+        drawLineOfWalls(new Position(1, 1), new Position(1, 5));
+        drawLineOfWalls(new Position(5, 4), new Position(5, 6));
+        drawLineOfWalls(new Position(6, 2), new Position(6, 4));
 
-        tiles.put(new Position(7, 4), new Tile(TileType.GOAL));
+        fillWithStandards(new Position(2, 2), new Position(4, 5));
 
-        //
+        tiles.put(new Position(5, 2), new Tile(TileType.WALL));
+
+        tiles.put(new Position(5, 3), new Tile(TileType.GOAL));
     }
 
     private void configureUpgrades() {
         //user input
         upgrades = new HashMap<>();
-        upgrades.put(new Position(2, 2), Upgrades.TWO);
-        upgrades.put(new Position(2, 7), Upgrades.ONE);
-        upgrades.put(new Position(7, 2), Upgrades.THREE);
-        upgrades.put(new Position(7, 7), Upgrades.TWO);
+        upgrades.put(new Position(2, 2), Upgrades.ONE);
+        upgrades.put(new Position(4, 2), Upgrades.ONE);
+        upgrades.put(new Position(2, 4), Upgrades.ONE);
+        upgrades.put(new Position(4, 4), Upgrades.ONE);
 
         //
     }
@@ -63,6 +65,5 @@ public class Level_1 extends Level {
             }
         }
     }
-
 
 }
