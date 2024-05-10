@@ -1,7 +1,5 @@
 package GameLogic;
 
-import AssetManager.TileType;
-
 public class Player {
     private Position playerPosition;
     private Upgrade playerUpgrades;
@@ -102,7 +100,7 @@ public class Player {
     public void adjustPosition(int x, int y, Direction direction){
         Position landOnPosition = new Position(playerPosition.x + x, playerPosition.y + y);
 
-        if(Game.currentlevel.isPlayable(landOnPosition)){
+        if(Game.currentlevel.tileIsPlayable(landOnPosition)){
             //landing Position is empty
              if(Game.currentlevel.upgrades.get(landOnPosition) == null){
                  setPlayerPosition(landOnPosition);

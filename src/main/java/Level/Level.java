@@ -3,7 +3,6 @@ package Level;
 import AssetManager.Tile;
 import AssetManager.TileType;
 import GameLogic.Position;
-import GameLogic.Upgrade;
 import GameLogic.Upgrades;
 
 
@@ -57,7 +56,7 @@ public abstract class Level {
         }
     }
 
-    public boolean isPlayable(Position pos){
+    public boolean tileIsPlayable(Position pos){
         if(tiles.get(pos).getTileType() == TileType.DARK || tiles.get(pos).getTileType() == TileType.LIGHT){
             return true;
         }
