@@ -67,7 +67,7 @@ public class Player {
     }
 
     public Image getPlayerIMG(){
-        return new ImageIcon("src/assets/player/player.png").getImage();
+        return new ImageIcon("src/assets/player/player_shadow.png").getImage();
     }
     public Image getUpgradeIMG(Upgrades up) {
         switch (up) {
