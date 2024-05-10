@@ -7,7 +7,7 @@ import GameLogic.Upgrades;
 
 import java.util.HashMap;
 
-public class Level_1 extends Level {
+public class Level_Test extends Level {
 
     @Override
     public void configure() {
