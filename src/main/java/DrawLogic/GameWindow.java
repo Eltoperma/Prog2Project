@@ -27,6 +27,7 @@ public class GameWindow extends JFrame {
     private int playerX;
     private int playerY;
     private int tileSize;
+    private JPanel gamePanel;
 
     private MP3Player backgroundMusicPlayer;
 
@@ -49,7 +50,9 @@ public class GameWindow extends JFrame {
         //setup Backgroundmusic
         backgroundMusicPlayer = new MP3Player(getSongs());
         backgroundMusicPlayer.setRepeat(true);
-        JPanel gamePanel = new JPanel() {
+
+        gamePanel = new JPanel() {
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -70,7 +73,6 @@ public class GameWindow extends JFrame {
                 gamePanel.repaint();
             }
         });
-
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -95,10 +97,12 @@ public class GameWindow extends JFrame {
         tiles = Game.getCurrentlevel().tiles;
         upgrades = Game.getCurrentlevel().upgrades;
     }
-    private void updatePlayerData(){
-        player = Game.getPlayer();
-    }
 
+    private   void updateGamefield(){
+        fetchDataFromGame();
+        updateTileSize(gamePanel);
+        repaint();
+    }
     private void updateTileSize(JPanel gamePanel) {
         int width = gamePanel.getWidth();
         int height = gamePanel.getHeight();
@@ -197,9 +201,8 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
         }
-        updatePlayerData();
         player.setPlayerPosition(new Position(playerX,playerY));
-        repaint();
+        updateGamefield();
     }
 
     private void drawGameField(Graphics graphics) {
