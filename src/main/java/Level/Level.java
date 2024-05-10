@@ -77,7 +77,7 @@ public abstract class Level {
     }
 
     public void fillWithStandards(Position start, Position end){
-        for(int y = start.x; y <= end.y; y++){
+        for(int y = start.y; y <= end.y; y++){
             for(int x = start.x; x <= end.x; x++) {
                 tiles.computeIfAbsent(new Position(x, y), k -> new Tile(TileType.STANDARD));
             }
