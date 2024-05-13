@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class Tile {
     TileType tile;
+    private boolean isGoal;
     public Tile(TileType tile){
         this.tile = tile;
     }
@@ -30,5 +31,13 @@ public class Tile {
 
     public TileType getTileType() {
         return tile;
+    }
+
+    public boolean isGoal(){
+        return isGoal;
+    }
+
+    public void setGoal(){
+        isGoal = true;
     }
 }

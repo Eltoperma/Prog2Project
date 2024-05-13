@@ -5,6 +5,7 @@ import DrawLogic.TileType;
 import GameLogic.Position;
 import GameLogic.Upgrades;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Level_20 extends Level {
@@ -17,6 +18,7 @@ public class Level_20 extends Level {
         width = 14;
         startingPosition = new Position(11, 6);
         //
+        finishPositions = new ArrayList<>();
 
         configureTiles();
         configureUpgrades();
