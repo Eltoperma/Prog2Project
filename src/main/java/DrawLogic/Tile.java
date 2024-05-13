@@ -28,7 +28,15 @@ public class Tile {
         }
         return img.getImage();
     }
-
+    public static Image getGoal(boolean winnable){
+        ImageIcon img;
+        if(winnable){
+            return new ImageIcon("src/assets/board/goal.png").getImage();
+        }
+        else {
+            return new ImageIcon("src/assets/board/goal_not_met.png").getImage();
+        }
+    }
     public TileType getTileType() {
         return tile;
     }

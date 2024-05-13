@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.net.URL;
 
@@ -219,6 +220,16 @@ public class GameWindow extends JFrame {
                 if(upgrades.get(new Position(x,y)) == null) continue;
                 graphics.drawImage(MapUpgrade.getImage(),x*tileSize+elementOffset,y*tileSize,elementSize,elementSize,null); //draw Upgradeshadow
                 graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffsetx+elementOffset,y*tileSize-shadowOffsety,elementSize,elementSize,null);//draw Upgrade
+            }
+        }
+        //Draw goals
+        ArrayList<Position> goal = Game.currentlevel.finishPositions;
+        for(Position pos : goal){
+            if(player.hasAllUpgrades()){
+                graphics.drawImage(Tile.getGoal(true),pos.x*tileSize, pos.y*tileSize, tileSize,tileSize,null);
+            }
+            else {
+                graphics.drawImage(Tile.getGoal(false),pos.x*tileSize, pos.y*tileSize, tileSize,tileSize,null);
             }
         }
 
