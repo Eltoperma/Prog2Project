@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Tile {
     TileType tile;
-    private boolean isGoal;
+    private boolean isGoal = false;
     public Tile(TileType tile){
         this.tile = tile;
     }

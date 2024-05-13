@@ -24,7 +24,9 @@ public class Level_1 extends Level {
         configureUpgrades();
         configureRest();
         addCheckPattern();
+        configureGoal();
     }
+
 
     private void configureTiles() {
 
@@ -47,6 +49,9 @@ public class Level_1 extends Level {
         tiles.put(new Position(5, 2), new Tile(TileType.WALL));
 
         tiles.put(new Position(5, 3), new Tile(TileType.STANDARD));
+
+    }
+    private void configureGoal() {
         setGoal(new Position(5, 3));
     }
 

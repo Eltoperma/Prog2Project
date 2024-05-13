@@ -147,6 +147,9 @@ public class Player {
         System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
         if (Game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
+
+            Game.currentlevel.test();
+
             if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("noUpgrade");
                 setPlayerPosition(landOnPosition);
@@ -159,7 +162,7 @@ public class Player {
                 setPlayerPosition(landOnPosition);
                 return;
             }
-
+            //landing position is goal
             if (Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("finish?");
                 if(canFinish()){

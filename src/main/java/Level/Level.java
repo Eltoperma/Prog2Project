@@ -95,7 +95,7 @@ public abstract class Level {
 
     public void test(){
         tiles.forEach((position, tile) -> {
-            System.out.println("Position : " + position.x + " " + position.y + " Tile: " + tile.getTileType());
+            System.out.println("Position : " + position.x + " " + position.y + " Tile: " + tile.getTileType() + " isGoal " + tile.isGoal());
         });
     }
 
