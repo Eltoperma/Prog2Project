@@ -147,7 +147,10 @@ public class Player {
         System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
         if (Game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
-            if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).getTileType().equals(TileType.GOAL)) {
+
+            Game.currentlevel.test();
+
+            if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("noUpgrade");
                 setPlayerPosition(landOnPosition);
                 return;
@@ -159,8 +162,8 @@ public class Player {
                 setPlayerPosition(landOnPosition);
                 return;
             }
-
-            if (Game.currentlevel.tiles.get(landOnPosition).getTileType().equals(TileType.GOAL)) {
+            //landing position is goal
+            if (Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("finish?");
                 if(canFinish()){
                     System.out.println("finish!");
@@ -168,6 +171,9 @@ public class Player {
                     Game.finish();
                     return;
                 };
+                System.out.println("goal but not sufficient upgrades");
+                setPlayerPosition(landOnPosition);
+                return;
             }
             throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht. Vllt ein Upgrade.");
 

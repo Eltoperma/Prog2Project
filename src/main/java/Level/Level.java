@@ -6,6 +6,7 @@ import GameLogic.Position;
 import GameLogic.Upgrades;
 
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public abstract class Level {
@@ -16,7 +17,7 @@ public abstract class Level {
     public int height;                              //inkl. unspielbarer Fläche
     public int width;                               //inkl. unspielbarer Fläche
     public Position startingPosition;
-    public Position finishPosition;
+    public ArrayList<Position> finishPositions;
 
     public void configure() {
     }
@@ -87,15 +88,20 @@ public abstract class Level {
     public boolean isPlayable(Position pos){
         Position newPos = new Position(pos.x, pos.y);
         if(tiles.containsKey(newPos)){
-            return tiles.get(newPos).getTileType().equals(TileType.DARK) || tiles.get(newPos).getTileType().equals(TileType.LIGHT) || tiles.get(newPos).getTileType().equals(TileType.GOAL);
+            return tiles.get(newPos).getTileType().equals(TileType.DARK) || tiles.get(newPos).getTileType().equals(TileType.LIGHT) || tiles.get(pos).isGoal();
         }
         throw new RuntimeException("Diese Position existiert nicht!?");
     }
 
     public void test(){
         tiles.forEach((position, tile) -> {
-            System.out.println("Position : " + position.x + " " + position.y + " Tile: " + tile.getTileType());
+            System.out.println("Position : " + position.x + " " + position.y + " Tile: " + tile.getTileType() + " isGoal " + tile.isGoal());
         });
+    }
+
+    public void setGoal(Position pos){
+        tiles.get(pos).setGoal();
+        finishPositions.add(pos);
     }
 
 }
