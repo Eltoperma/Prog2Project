@@ -28,11 +28,12 @@ public class GameWindow extends JFrame {
     private int playerY;
     private int tileSize;
     private JPanel gamePanel;
-
+    private ScalingChecker checker = new ScalingChecker();
     private MP3Player backgroundMusicPlayer;
 
 
     public GameWindow() {
+        checker.isScalingOn(this);
         //set Window Icon
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
