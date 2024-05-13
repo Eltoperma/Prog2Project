@@ -206,24 +206,27 @@ public class GameWindow extends JFrame {
     }
 
     private void drawGameField(Graphics graphics) {
-       int shadowOffsetx = 0;
-       int shadowOffsety = 10;
+
+        int elementSize = tileSize - (tileSize/6);
+        int elementOffset = (tileSize-elementSize)/2;
+        int shadowOffsetx = 0;
+        int shadowOffsety = 10;
         Map<Position, Upgrades> upgrades = Game.currentlevel.upgrades;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 graphics.drawImage(tiles.get(new Position(x,y)).getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null); //draw Tile
                 if(upgrades.get(new Position(x,y)) == null) continue;
-                graphics.drawImage(MapUpgrade.getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null); //draw Upgradeshadow
-                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffsetx,y*tileSize-shadowOffsety,tileSize,tileSize,null);//draw Upgrade
+                graphics.drawImage(MapUpgrade.getImage(),x*tileSize+elementOffset,y*tileSize,elementSize,elementSize,null); //draw Upgradeshadow
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffsetx+elementOffset,y*tileSize-shadowOffsety,elementSize,elementSize,null);//draw Upgrade
             }
         }
 
         Position pos = this.player.getPlayerPosition();
-        graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize,pos.y*tileSize,tileSize,tileSize,null); //draw player
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety,tileSize , tileSize, 0); //Upgrade Up
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI*0.5); //Upgrade Right
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI); //Upgrade Down
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize-shadowOffsetx, pos.y * tileSize-shadowOffsety, tileSize, tileSize, Math.PI*1.5); //Upgrade Left
+        graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize+elementOffset,pos.y*tileSize,elementSize,elementSize,null); //draw player
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety,elementSize , elementSize, 0); //Upgrade Up
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI*0.5); //Upgrade Right
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI); //Upgrade Down
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI*1.5); //Upgrade Left
 
     }
 
