@@ -33,8 +33,6 @@ public class GameWindow extends JFrame {
 
 
     public GameWindow() {
-        ScalingChecker checker = new ScalingChecker();
-        checker.isScalingOn(this);
         //set Window Icon
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
