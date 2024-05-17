@@ -3,7 +3,6 @@ package GameLogic;
 import Level.*;
 
 public class Game {
-
     public static Player player;
    public static Level currentlevel;
 

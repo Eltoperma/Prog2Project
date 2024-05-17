@@ -11,13 +11,18 @@ import java.util.Map;
 
 public abstract class Level {
 
-
+    public String title;
     public Map<Position, Tile> tiles;               //spielbare Fläche
     public Map<Position, Upgrades> upgrades;
     public int height;                              //inkl. unspielbarer Fläche
     public int width;                               //inkl. unspielbarer Fläche
     public Position startingPosition;
     public ArrayList<Position> finishPositions;
+
+    public Level(){
+
+    }
+
 
     public void configure() {
     }

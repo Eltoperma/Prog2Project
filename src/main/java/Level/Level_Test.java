@@ -5,6 +5,7 @@ import DrawLogic.TileType;
 import GameLogic.Position;
 import GameLogic.Upgrades;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Level_Test extends Level {
@@ -17,11 +18,14 @@ public class Level_Test extends Level {
         width = 10;
         startingPosition = new Position(3, 3);
         //
+        finishPositions = new ArrayList<>();
 
         configureTiles();
         configureUpgrades();
         configureRest();
         addCheckPattern();
+        setGoal(new Position(7, 4));
+
     }
 
     private void configureTiles() {
@@ -39,8 +43,6 @@ public class Level_Test extends Level {
         tiles.put(new Position(7, 3), new Tile(TileType.WALL));
         tiles.put(new Position(6, 4), new Tile(TileType.WALL));
         tiles.put(new Position(7, 5), new Tile(TileType.WALL));
-
-        tiles.put(new Position(7, 4), new Tile(TileType.GOAL));
 
         //
     }
