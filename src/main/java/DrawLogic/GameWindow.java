@@ -16,7 +16,7 @@ import java.util.Map;
 import java.net.URL;
 
 
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame{
 
     Game game;
     public Map<Position, Tile> tiles;               //spielbare Fläche
@@ -199,6 +199,15 @@ public class GameWindow extends JFrame {
                 break;
             case KeyEvent.VK_COMMA:
                 backgroundMusicPlayer.skipForward();
+                break;
+            case KeyEvent.VK_R:
+                GameHandler.resetGame();
+                break;
+            case KeyEvent.VK_P:
+                GameHandler.nextGame();
+                break;
+            case KeyEvent.VK_O:
+                GameHandler.lastGame();
                 break;
         }
         player.setPlayerPosition(new Position(playerX,playerY));

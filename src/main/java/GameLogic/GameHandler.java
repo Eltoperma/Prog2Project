@@ -71,7 +71,15 @@ public class GameHandler {
     public static void lastGame(){
         if(levelNo > 0){
             levelNo--;
-            Game.setCurrentLevel(Levels.getLevel(levelNo - 1));
+            GameHandler.initLvl();
         }
     }
+
+    public static void resetGame(){
+        GameHandler.initLvl();
+    }
+
+
+
+
 }
