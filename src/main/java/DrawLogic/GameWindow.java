@@ -25,8 +25,8 @@ public class GameWindow extends JFrame {
     private int rows;
     private int cols;
     private Player player;
-    private int playerX;
-    private int playerY;
+    private Position oldPlayerPosition = null;
+
     private int tileSize;
     private JPanel gamePanel;
     private MP3Player backgroundMusicPlayer;
@@ -50,6 +50,7 @@ public class GameWindow extends JFrame {
         //setup Backgroundmusic
         backgroundMusicPlayer = new MP3Player(getSongs());
         backgroundMusicPlayer.setRepeat(true);
+
 
         gamePanel = new JPanel() {
 
@@ -81,8 +82,10 @@ public class GameWindow extends JFrame {
             }
         });
 
+        oldPlayerPosition = Game.getCurrentlevel().startingPosition;
         updateTileSize(gamePanel); // Initialize tile size
         playBackgroundMusic();
+        runUpdater();
     }
 
     private void fetchDataFromGame() {
@@ -90,15 +93,13 @@ public class GameWindow extends JFrame {
         rows = Game.getCurrentlevel().height;
         cols = Game.getCurrentlevel().width;
         player = Game.getPlayer();
-        playerX = Game.getPlayer().getPlayerPosition().x;
-        System.out.println("Pos: " + Game.getPlayer().getPlayerPosition() + " x " + Game.getPlayer().getPlayerPosition().x + " y " + Game.getPlayer().getPlayerPosition().y);
-        playerY = Game.getPlayer().getPlayerPosition().y;
-        this.player.setPlayerPosition(new Position(playerX,playerY));
+        //System.out.println("Pos: " + Game.getPlayer().getPlayerPosition() + " x " + Game.getPlayer().getPlayerPosition().x + " y " + Game.getPlayer().getPlayerPosition().y);
+        this.player.setPlayerPosition(Game.getPlayer().getPlayerPosition());
         tiles = Game.getCurrentlevel().tiles;
         upgrades = Game.getCurrentlevel().upgrades;
     }
 
-    private   void updateGamefield(){
+    private void updateGamefield(){
         fetchDataFromGame();
         updateTileSize(gamePanel);
         repaint();
@@ -110,6 +111,16 @@ public class GameWindow extends JFrame {
         int tileWidth = width / cols;
         int tileHeight = height / rows;
         tileSize = Math.min(tileWidth, tileHeight);
+    }
+    private void runUpdater() {
+        Timer timer = new Timer(12,null);
+        timer.setRepeats(false);
+        new Thread(()->{
+             while (true) {
+                 timer.start();
+                 if(!timer.isRunning())updateGamefield();
+              }
+        }).start();
     }
     private void playBackgroundMusic() {
         new Thread(new Runnable() {
@@ -147,14 +158,15 @@ public class GameWindow extends JFrame {
             }
         }).start();
     }
-
+    //TODO ADD INPUT TIMEOUT TO LET ANIMATION PLAY OUT
     private void controlGame(int keyCode) {
+        updateOldPlayerPosition();
         switch (keyCode) {
             case KeyEvent.VK_W:
-                if (playerY > 0) {
+                if (player.getPlayerPosition().y > 0) {
                     try {
                         Game.getPlayer().move(Direction.UP);
-                        playerY = Game.getPlayer().getPlayerPosition().y;
+                        player.setPlayerPosition(Game.getPlayer().getPlayerPosition());
                     }
                     catch(Exception e) {
                         System.err.println("Fehler: " + e.getMessage());
@@ -162,10 +174,10 @@ public class GameWindow extends JFrame {
                 }
                 break;
             case KeyEvent.VK_S:
-                if (playerY < rows - 1) {
+                if (player.getPlayerPosition().y < rows - 1) {
                     try {
                         Game.getPlayer().move(Direction.DOWN);
-                        playerY = Game.getPlayer().getPlayerPosition().y;
+                        player.setPlayerPosition(Game.getPlayer().getPlayerPosition());
                     }
                     catch(Exception e) {
                         System.err.println("Fehler: " + e.getMessage());
@@ -173,10 +185,10 @@ public class GameWindow extends JFrame {
                 }
                 break;
             case KeyEvent.VK_A:
-                if (playerX > 0) {
+                if (player.getPlayerPosition().x > 0) {
                     try {
                         Game.getPlayer().move(Direction.LEFT);
-                        playerX = Game.getPlayer().getPlayerPosition().x;
+                        player.setPlayerPosition(Game.getPlayer().getPlayerPosition());
                     }
                     catch(Exception e) {
                         System.err.println("Fehler: " + e.getMessage());
@@ -184,10 +196,10 @@ public class GameWindow extends JFrame {
                 }
                 break;
             case KeyEvent.VK_D:
-                if (playerX < cols - 1) {
+                if (player.getPlayerPosition().x < cols - 1) {
                     try {
                         Game.getPlayer().move(Direction.RIGHT);
-                        playerX = Game.getPlayer().getPlayerPosition().x;
+                        player.setPlayerPosition(Game.getPlayer().getPlayerPosition());
                     }
                     catch(Exception e) {
                         System.err.println("Fehler: " + e.getMessage());
@@ -201,23 +213,23 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
         }
-        player.setPlayerPosition(new Position(playerX,playerY));
-        updateGamefield();
+        //updateGamefield();
     }
-
+    private void updateOldPlayerPosition(){
+        oldPlayerPosition = Game.getPlayer().getPlayerPosition();
+    }
     private void drawGameField(Graphics graphics) {
 
-        int elementSize = tileSize - (tileSize/6);
-        int elementOffset = (tileSize-elementSize)/2;
-        int shadowOffsetx = 0;
-        int shadowOffsety = 10;
+        int elementSize = tileSize - (tileSize / 6);
+        int elementOffset = (tileSize - elementSize) / 2;
+        Position shadowOffset = new Position(0,10);
         Map<Position, Upgrades> upgrades = Game.currentlevel.upgrades;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 graphics.drawImage(tiles.get(new Position(x,y)).getImage(),x*tileSize,y*tileSize,tileSize,tileSize,null); //draw Tile
                 if(upgrades.get(new Position(x,y)) == null) continue;
                 graphics.drawImage(MapUpgrade.getImage(),x*tileSize+elementOffset,y*tileSize,elementSize,elementSize,null); //draw Upgradeshadow
-                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffsetx+elementOffset,y*tileSize-shadowOffsety,elementSize,elementSize,null);//draw Upgrade
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x,y))),x*tileSize-shadowOffset.x+elementOffset,y*tileSize-shadowOffset.y,elementSize,elementSize,null);//draw Upgrade
             }
         }
         //Draw goals
@@ -231,15 +243,49 @@ public class GameWindow extends JFrame {
             }
         }
 
+        if(player.getPlayerPosition().x != oldPlayerPosition.x || player.getPlayerPosition().y != oldPlayerPosition.y){
+
         Position pos = this.player.getPlayerPosition();
-        graphics.drawImage(player.getPlayerIMG(),pos.x*tileSize+elementOffset,pos.y*tileSize,elementSize,elementSize,null); //draw player
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety,elementSize , elementSize, 0); //Upgrade Up
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI*0.5); //Upgrade Right
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI); //Upgrade Down
-        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x * tileSize-shadowOffsetx+elementOffset, pos.y * tileSize-shadowOffsety, elementSize, elementSize, Math.PI*1.5); //Upgrade Left
+        Position newPosInPixels = new Position(pos.x*tileSize, pos.y*tileSize);
+        Position oldPosInPixels = new Position(oldPlayerPosition.x*tileSize,oldPlayerPosition.y*tileSize);
+
+        int deltaX = newPosInPixels.x - oldPosInPixels.x;
+        int deltaY = newPosInPixels.y - oldPosInPixels.y;
+
+        int steps = 12; // amount of frames for animation
+        int currentStep = 0;
+
+        Timer animationTimer = new Timer(1000/steps,null);
+        animationTimer.setRepeats(false);
+
+        while(currentStep <= steps){
+            double t = (double) currentStep/steps;
+            double easingMultiplier = t*t / (t*t + (1 - t)*(1 - t));
+
+            int x = oldPlayerPosition.x + (int) (deltaX*easingMultiplier);
+            int y = oldPlayerPosition.y + (int) (deltaY*easingMultiplier);
+
+            drawPlayer(graphics,new Position(x,y),elementSize,elementOffset);
+
+            animationTimer.start();
+            if(!animationTimer.isRunning()){
+                currentStep++;
+            }
+         }
+        }
 
     }
+    private void drawPlayer(Graphics graphics, Position pos, int elementSize, int elementOffset){
+        int shadowOffsetx = 0;
+        int shadowOffsety = 10;
+        System.out.println("Drawing player on: " + pos.x + " " + pos.y );
 
+        graphics.drawImage(player.getPlayerIMG(),pos.x+elementOffset,pos.y,elementSize,elementSize,null);
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().upUpgrade), pos.x-shadowOffsetx+elementOffset, pos.y-shadowOffsety,elementSize , elementSize, 0); //Upgrade Up
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x-shadowOffsetx+elementOffset, pos.y-shadowOffsety, elementSize, elementSize, Math.PI*0.5); //Upgrade Right
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x-shadowOffsetx+elementOffset, pos.y-shadowOffsety, elementSize, elementSize, Math.PI); //Upgrade Down
+        drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x-shadowOffsetx+elementOffset, pos.y-shadowOffsety, elementSize, elementSize, Math.PI*1.5); //Upgrade Left
+    }
     private void drawRotatedImage(Graphics g, Image image, int x, int y, int width, int height, double angle) {
         if (image != null) {
             Graphics2D g2d = (Graphics2D) g;
