@@ -16,7 +16,7 @@ public class GameHandler {
     static int levelNo = 1;
 
     public static void init(){
-        System.out.println("init");
+        //System.out.println("init");
 //        game = new Game();
 
         new Levels();
@@ -34,7 +34,7 @@ public class GameHandler {
     }
 
     public static void initLvl(){
-        System.out.println("init");
+        //System.out.println("init");
 //        game = new Game();
 
         new Levels();
