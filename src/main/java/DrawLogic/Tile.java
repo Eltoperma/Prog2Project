@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Tile {
-    TileType tile;
+    public TileType tile;
     private boolean isGoal = false;
     public Tile(TileType tile){
         this.tile = tile;
