@@ -10,6 +10,7 @@ import java.awt.*;
 public class Player {
     private Position playerPosition;
 
+
     public Upgrade getPlayerUpgrades() {
         return playerUpgrades;
     }
@@ -148,11 +149,12 @@ public class Player {
         if (Game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
 
-            Game.currentlevel.test();
+//            Game.currentlevel.test();
 
             if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("noUpgrade");
                 setPlayerPosition(landOnPosition);
+                Game.updateMoves();
                 return;
             }
             //landing Position contains upgrade and is collectable
@@ -160,11 +162,13 @@ public class Player {
                 System.out.println("collectUpgrade");
                 collectUpgrade(direction, landOnPosition);
                 setPlayerPosition(landOnPosition);
+                Game.updateMoves();
                 return;
             }
             //landing position is goal
             if (Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("finish?");
+                Game.updateMoves();
                 if(canFinish()){
                     System.out.println("finish!");
                     Game.getPlayer().setPlayerPosition(landOnPosition);

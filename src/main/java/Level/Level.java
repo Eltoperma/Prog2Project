@@ -18,6 +18,8 @@ public abstract class Level {
     public int width;                               //inkl. unspielbarer Fläche
     public Position startingPosition;
     public ArrayList<Position> finishPositions;
+    public int bestTime = Integer.MAX_VALUE;
+    public int bestMoves = Integer.MAX_VALUE;
 
     public Level(){
 
