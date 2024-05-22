@@ -30,12 +30,12 @@ public class GameWindow extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        backgroundMusicPlayer = new MP3Player(getSongs());
-        backgroundMusicPlayer.setRepeat(true);
+        //backgroundMusicPlayer = new MP3Player(getSongs());
+        //backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51,51,51));
         gamePanel=  new GamePanel();
-
+        gamePanel.setPreferredSize(new Dimension(1000,1000));
         add(gamePanel);
         pack();
         playBackgroundMusic();
@@ -46,8 +46,6 @@ public class GameWindow extends JFrame {
                 controlWindow(keyCode);
             }
         });
-
-
     }
     private void controlWindow(int keyCode){
         switch (keyCode) {
@@ -58,9 +56,22 @@ public class GameWindow extends JFrame {
             case KeyEvent.VK_COMMA:
                 backgroundMusicPlayer.skipForward();
                 break;
+            case KeyEvent.VK_P:
+                GameHandler.nextGame();
+                gamePanel.updatePanel();
+                break;
+            case KeyEvent.VK_O:
+                GameHandler.lastGame();
+                gamePanel.updatePanel();
+                break;
+            case KeyEvent.VK_R:
+                GameHandler.resetGame();
+                gamePanel.updatePanel();
+                break;
             default:
                 gamePanel.controlGame(keyCode);
         }
+
     }
     private void playBackgroundMusic() {
         new Thread(new Runnable() {

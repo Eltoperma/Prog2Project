@@ -21,9 +21,9 @@ public class GamePanel extends JPanel {
     private Map<Position, Upgrades> upgrades;
     private boolean moveFinished = true;
     private Timer animationTimer;
+    private boolean firstDraw = true;
     GamePanel() {
-        fetchDataFromGame();
-        playerPixelPosition = new Position(player.getPlayerPosition().x*tileSize,player.getPlayerPosition().y*tileSize);
+        updateGamefield();
 
     };
 
@@ -69,19 +69,6 @@ private void updateTileSize() {
 
 }
 
-
-private void runUpdater() {
-    Timer timer = new Timer(12, null);
-    timer.setRepeats(false);
-    new Thread(() -> {
-        while (true) {
-            timer.start();
-            if (!timer.isRunning()) updateGamefield();
-        }
-    }).start();
-}
-
-//TODO ADD INPUT TIMEOUT TO LET ANIMATION PLAY OUT
 public void controlGame(int keyCode) {
     if(!moveFinished)return;
     updateOldPlayerPosition();
@@ -141,7 +128,13 @@ public void controlGame(int keyCode) {
 private void updateOldPlayerPosition() {
     oldPlayerPosition = Game.getPlayer().getPlayerPosition();
 }
-
+public void updatePanel(){
+        animationTimer.stop();
+        firstDraw = true;
+        updateGamefield();
+        //playerPixelPosition = new Position(player.getPlayerPosition().x*tileSize,player.getPlayerPosition().y*tileSize);
+        repaint();
+    }
 private void drawGameField(Graphics graphics) {
     updateTileSize();
     int elementSize = tileSize - (tileSize / 6);
@@ -170,6 +163,11 @@ private void drawGameField(Graphics graphics) {
 }
 
 private void drawPlayer(Graphics graphics, Position pos, int elementSize, int elementOffset) {
+        if(firstDraw) {
+            playerPixelPosition = new Position(player.getPlayerPosition().x*tileSize,player.getPlayerPosition().y*tileSize);
+            firstDraw = false;
+            pos = playerPixelPosition;
+        }
     int shadowOffsetx = 0;
     int shadowOffsety = 6;
     System.out.println("Drawing player on: " + pos.x + " " + pos.y);
@@ -179,6 +177,7 @@ private void drawPlayer(Graphics graphics, Position pos, int elementSize, int el
     drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().rightUpgrade), pos.x - shadowOffsetx + elementOffset, pos.y - shadowOffsety, elementSize, elementSize, Math.PI * 0.5); //Upgrade Right
     drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().downUpgrade), pos.x - shadowOffsetx + elementOffset, pos.y - shadowOffsety, elementSize, elementSize, Math.PI); //Upgrade Down
     drawRotatedImage(graphics, this.player.getUpgradeIMG(player.getPlayerUpgrades().leftUpgrade), pos.x - shadowOffsetx + elementOffset, pos.y - shadowOffsety, elementSize, elementSize, Math.PI * 1.5); //Upgrade Left
+
 }
 
 private void drawRotatedImage(Graphics g, Image image, int x, int y, int width, int height, double angle) {
@@ -201,14 +200,15 @@ private void startAnimation() {
     int deltaX = newPosInPixels.x - oldPosInPixels.x;
     int deltaY = newPosInPixels.y - oldPosInPixels.y;
 
-    int steps = 24;
+    int steps = 12;
 
-    animationTimer = new Timer(4, new ActionListener() {
+    animationTimer = new Timer(0, new ActionListener() {
         int currentStep  = 0;
         @Override
         public void actionPerformed(ActionEvent e) {
+            updateGamefield();
             if (currentStep >= steps) {
-                ((Timer)e.getSource()).stop(); // Stop the timer
+                animationTimer.stop();
                 moveFinished = true;
             } else {
                 double t = (double) currentStep / steps;
