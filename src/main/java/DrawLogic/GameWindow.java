@@ -30,8 +30,8 @@ public class GameWindow extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //backgroundMusicPlayer = new MP3Player(getSongs());
-        //backgroundMusicPlayer.setRepeat(true);
+        backgroundMusicPlayer = new MP3Player(getSongs());
+        backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51,51,51));
         gamePanel=  new GamePanel();
