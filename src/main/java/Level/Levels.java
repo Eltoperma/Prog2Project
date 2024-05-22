@@ -22,10 +22,10 @@ public class Levels {
         return levelList.get(level);
     }
 
-    public static void changeToCustomLevel(String title, Map<Position, Tile> tiles, Map<Position, Upgrades> upgrades, Position startingPosition, ArrayList<Position> finishPositions, int height, int width){
-        levelList.clear();
-        levelList.add(new LoadedLevel(title, tiles, upgrades, startingPosition, finishPositions, height, width));
-    }
+//    public static void changeToCustomLevel(String title, Map<Position, Tile> tiles, Map<Position, Upgrades> upgrades, Position startingPosition, ArrayList<Position> finishPositions, int height, int width){
+//        levelList.clear();
+//        levelList.add(new LoadedLevel(title, tiles, upgrades, startingPosition, finishPositions, height, width));
+//    }
 
 
 }
