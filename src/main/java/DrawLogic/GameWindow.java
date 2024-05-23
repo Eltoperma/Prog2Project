@@ -74,12 +74,7 @@ public class GameWindow extends JFrame {
 
     }
     private void playBackgroundMusic() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                backgroundMusicPlayer.play();
-            }
-        }).start();
+        new Thread(() -> backgroundMusicPlayer.play()).start();
     }
 
     private File[] getSongs() {
