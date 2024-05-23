@@ -28,6 +28,7 @@ public class GameWindow extends JFrame {
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
+        setBackground(Color.BLACK);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -50,6 +51,7 @@ public class GameWindow extends JFrame {
     }
 
     private void controlWindow(int keyCode) {
+        if(!gamePanel.isAnimationFinished) return;
         Position from = game.getPlayer().getPlayerPosition();
         Position to;
         switch (keyCode) {
@@ -76,7 +78,6 @@ public class GameWindow extends JFrame {
                 gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_W:
-
                 game.getPlayer().move(Direction.UP);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
