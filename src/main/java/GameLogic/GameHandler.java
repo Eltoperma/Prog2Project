@@ -29,7 +29,7 @@ public class GameHandler {
         game.addPlayer();
 
         SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow();
+            GameWindow window = new GameWindow(game);
             window.setVisible(true);
         });
     }
@@ -38,9 +38,9 @@ public class GameHandler {
         //System.out.println("init");
 //        game = new Game();
 
-        game = new Game();
+//        game = new Game();
 
-        new Levels();
+//        new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();

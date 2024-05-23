@@ -10,10 +10,13 @@ public class Game {
    public Level currentlevel;
     private  int movesCount;
     private  int timeCount;
+    private Timer timer;
+    private GameTimerTask task;
 
-   public  boolean isFinished = false;
+    public  boolean isFinished = false;
 
     public Game(){
+        initLevelParams();
     }
 
     public  int getMovesCount() {
@@ -44,7 +47,6 @@ public class Game {
     public void setCurrentLevel(Level level){
         currentlevel = level;
         System.out.println("setCurrentLevel: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
-        initLevelParams();
     }
 
     public void initLevelParams(){
@@ -54,30 +56,17 @@ public class Game {
     }
 
     public void countTime(){
-        Timer timer = new Timer();
-        GameTimerTask task = new GameTimerTask();
+        timer = new Timer();
+        task = new GameTimerTask(this);
 
-        // Starte den Timer, die Aufgabe wird jede Sekunde ausgeführt
         timer.scheduleAtFixedRate(task, 0, 1000);
-
-        // Zum Beispiel, um den Timer nach 10 Sekunden zu stoppen:
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                timer.cancel();
-                System.out.println("Timer gestoppt");
-            }
-        }, 10000);
-
-        // Hier kannst du andere Spiel-logik einfügen
-        // Der Timer läuft im Hintergrund
 
     }
 
 
     public void addPlayer(){
         System.out.println("addPlayer: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
-        player = new Player(currentlevel.startingPosition, new Upgrade());
+        player = new Player(currentlevel.startingPosition, new Upgrade(), this);
     }
 
     public Player getPlayer() {
@@ -90,6 +79,7 @@ public class Game {
 
     public void finish(){
         isFinished = true;
+        timer.cancel();
         System.out.println("Win du wichser");
         System.out.println("Moves: " + movesCount + " Zeit: " + timeCount);
         testForBestScore();

@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class Player {
     private Position playerPosition;
+    private Game game;
 
 
     public Upgrade getPlayerUpgrades() {
@@ -17,9 +18,10 @@ public class Player {
 
     private Upgrade playerUpgrades;
 
-    public Player(Position position, Upgrade upgrades) {
+    public Player(Position position, Upgrade upgrades, Game game) {
         playerPosition = position;
         playerUpgrades = upgrades;
+        this.game = game;
     }
 
     public boolean hasPlayerUpgradeOnDirection(Direction direction) {
@@ -146,33 +148,33 @@ public class Player {
         Position landOnPosition = new Position((playerPosition.x + xDiff), (playerPosition.y + yDiff));
 
         System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
-        if (Game.currentlevel.isPlayable(landOnPosition)) {
+        if (game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
 
 //            Game.currentlevel.test();
 
-            if (Game.currentlevel.upgrades.get(landOnPosition) == null && !Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
+            if (game.currentlevel.upgrades.get(landOnPosition) == null && !game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("noUpgrade");
                 setPlayerPosition(landOnPosition);
-                Game.updateMoves();
+                game.updateMoves();
                 return;
             }
             //landing Position contains upgrade and is collectable
-            if (Game.currentlevel.upgrades.get(landOnPosition) != null && !hasPlayerUpgradeOnDirection(direction)) {
+            if (game.currentlevel.upgrades.get(landOnPosition) != null && !hasPlayerUpgradeOnDirection(direction)) {
                 System.out.println("collectUpgrade");
                 collectUpgrade(direction, landOnPosition);
                 setPlayerPosition(landOnPosition);
-                Game.updateMoves();
+                game.updateMoves();
                 return;
             }
             //landing position is goal
-            if (Game.currentlevel.tiles.get(landOnPosition).isGoal()) {
+            if (game.currentlevel.tiles.get(landOnPosition).isGoal()) {
                 System.out.println("finish?");
-                Game.updateMoves();
+                game.updateMoves();
                 if(canFinish()){
                     System.out.println("finish!");
-                    Game.getPlayer().setPlayerPosition(landOnPosition);
-                    Game.finish();
+                    game.getPlayer().setPlayerPosition(landOnPosition);
+                    game.finish();
                     return;
                 };
                 System.out.println("goal but not sufficient upgrades");
@@ -187,13 +189,13 @@ public class Player {
 
     private void collectUpgrade(Direction direction, Position pos) {
         switch (direction) {
-            case UP -> playerUpgrades.upUpgrade = Game.currentlevel.upgrades.get(pos);
-            case LEFT -> playerUpgrades.leftUpgrade = Game.currentlevel.upgrades.get(pos);
-            case RIGHT -> playerUpgrades.rightUpgrade = Game.currentlevel.upgrades.get(pos);
-            case DOWN -> playerUpgrades.downUpgrade = Game.currentlevel.upgrades.get(pos);
+            case UP -> playerUpgrades.upUpgrade = game.currentlevel.upgrades.get(pos);
+            case LEFT -> playerUpgrades.leftUpgrade = game.currentlevel.upgrades.get(pos);
+            case RIGHT -> playerUpgrades.rightUpgrade = game.currentlevel.upgrades.get(pos);
+            case DOWN -> playerUpgrades.downUpgrade = game.currentlevel.upgrades.get(pos);
             default -> throw new RuntimeException("Invalides Upgrade!");
         }
-        Game.currentlevel.upgrades.remove(pos);
+        game.currentlevel.upgrades.remove(pos);
     }
 
     public boolean canFinish(){
