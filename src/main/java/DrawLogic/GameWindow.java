@@ -21,9 +21,10 @@ public class GameWindow extends JFrame {
 
     private MP3Player backgroundMusicPlayer;
     private DrawPanel gamePanel;
-
+    private Game game;
 
     public GameWindow(Game game) {
+        this.game = game;
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
@@ -33,9 +34,9 @@ public class GameWindow extends JFrame {
         backgroundMusicPlayer = new MP3Player(getSongs());
         backgroundMusicPlayer.setRepeat(true);
 
-        setBackground(new Color(51,51,51));
-        gamePanel=  new DrawPanel(game);
-        gamePanel.setPreferredSize(new Dimension(1000,1000));
+        setBackground(new Color(51, 51, 51));
+        gamePanel = new DrawPanel(game);
+        gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
         pack();
         playBackgroundMusic();
@@ -47,9 +48,12 @@ public class GameWindow extends JFrame {
             }
         });
     }
-    private void controlWindow(int keyCode){
+
+    private void controlWindow(int keyCode) {
+        Position from = game.getPlayer().getPlayerPosition();
+        Position to;
         switch (keyCode) {
-            case KeyEvent.VK_M:{
+            case KeyEvent.VK_M: {
                 toggleMusic();
             }
             break;
@@ -68,9 +72,31 @@ public class GameWindow extends JFrame {
                 GameHandler.resetGame();
                 gamePanel.recalculateDimensions();
                 break;
+            case KeyEvent.VK_W:
+
+                game.getPlayer().move(Direction.UP);
+                to = game.getPlayer().getPlayerPosition();
+                gamePanel.movePlayer(from, to);
+                break;
+            case KeyEvent.VK_D:
+                game.getPlayer().move(Direction.RIGHT);
+                to = game.getPlayer().getPlayerPosition();
+                gamePanel.movePlayer(from, to);
+                break;
+            case KeyEvent.VK_S:
+                game.getPlayer().move(Direction.DOWN);
+                to = game.getPlayer().getPlayerPosition();
+                gamePanel.movePlayer(from, to);
+                break;
+            case KeyEvent.VK_A:
+                game.getPlayer().move(Direction.LEFT);
+                to = game.getPlayer().getPlayerPosition();
+                gamePanel.movePlayer(from, to);
+                break;
         }
 
     }
+
     private void playBackgroundMusic() {
         new Thread(() -> backgroundMusicPlayer.play()).start();
     }
@@ -87,13 +113,5 @@ public class GameWindow extends JFrame {
         } else {
             backgroundMusicPlayer.pause();
         }
-    }
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow();
-            window.setVisible(true);
-        });
     }
 }
