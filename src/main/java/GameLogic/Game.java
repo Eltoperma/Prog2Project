@@ -6,54 +6,54 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Game {
-    public static Player player;
-   public static Level currentlevel;
-    private static int movesCount;
-    private static int timeCount;
+    public Player player;
+   public Level currentlevel;
+    private  int movesCount;
+    private  int timeCount;
 
-   public static boolean isFinished = false;
+   public  boolean isFinished = false;
 
     public Game(){
     }
 
-    public static int getMovesCount() {
+    public  int getMovesCount() {
         return movesCount;
     }
 
-    public static void setMovesCount(int movesCount) {
-        Game.movesCount = movesCount;
+    public void setMovesCount(int movesCount) {
+        movesCount = movesCount;
     }
 
-    public static void updateMoves(){
+    public void updateMoves(){
         movesCount++;
         System.out.println("Move: " + movesCount);
     }
 
-    public static void updateTimer(){
+    public void updateTimer(){
         timeCount++;
     }
 
-    public static long getTimeCount() {
+    public long getTimeCount() {
         return timeCount;
     }
 
-    public static void setTimeCount(int timeCount) {
-        Game.timeCount = timeCount;
+    public void setTimeCount(int timeCount) {
+        timeCount = timeCount;
     }
 
-    public static void setCurrentLevel(Level level){
+    public void setCurrentLevel(Level level){
         currentlevel = level;
         System.out.println("setCurrentLevel: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
         initLevelParams();
     }
 
-    public static void initLevelParams(){
+    public void initLevelParams(){
         movesCount = 0;
         timeCount = 0;
         countTime();
     }
 
-    public static void countTime(){
+    public void countTime(){
         Timer timer = new Timer();
         GameTimerTask task = new GameTimerTask();
 
@@ -75,20 +75,20 @@ public class Game {
     }
 
 
-    public static void addPlayer(){
+    public void addPlayer(){
         System.out.println("addPlayer: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
         player = new Player(currentlevel.startingPosition, new Upgrade());
     }
 
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
-    public static Level getCurrentlevel() {
+    public Level getCurrentlevel() {
         return currentlevel;
     }
 
-    public static void finish(){
+    public void finish(){
         isFinished = true;
         System.out.println("Win du wichser");
         System.out.println("Moves: " + movesCount + " Zeit: " + timeCount);
@@ -96,7 +96,7 @@ public class Game {
         GameHandler.nextGame();
     }
 
-    private static void testForBestScore() {
+    private void testForBestScore() {
         if(isFinished) {
             if(movesCount < currentlevel.bestMoves){
                 System.out.println("Neuer Rekord an Zügen!");

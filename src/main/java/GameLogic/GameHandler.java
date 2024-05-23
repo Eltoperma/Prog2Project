@@ -19,13 +19,14 @@ public class GameHandler {
         //System.out.println("init");
 //        game = new Game();
 
+        game = new Game();
         new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
-        Game.setCurrentLevel(level);
+        game.setCurrentLevel(level);
 
-        Game.addPlayer();
+        game.addPlayer();
 
         SwingUtilities.invokeLater(() -> {
             GameWindow window = new GameWindow();
@@ -37,13 +38,15 @@ public class GameHandler {
         //System.out.println("init");
 //        game = new Game();
 
+        game = new Game();
+
         new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
-        Game.setCurrentLevel(level);
+        game.setCurrentLevel(level);
 
-        Game.addPlayer();
+        game.addPlayer();
 
     }
 
