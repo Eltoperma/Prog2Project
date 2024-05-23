@@ -142,6 +142,8 @@ public class DrawPanel extends JPanel {
                     if(playerAnimationTimer.isRunning()){
                         playerAnimationTimer.stop();
                         isAnimationFinished = true;
+                        refetchPlayer();
+                        recalculateDimensions();
                     }
                 } else {
                     double t = (double) currentFrame / animationFrameCount;
