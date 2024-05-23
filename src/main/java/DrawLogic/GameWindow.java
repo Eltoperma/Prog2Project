@@ -31,15 +31,15 @@ public class GameWindow extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        backgroundMusicPlayer = new MP3Player(getSongs());
-        backgroundMusicPlayer.setRepeat(true);
+        //backgroundMusicPlayer = new MP3Player(getSongs());
+        //backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51, 51, 51));
         gamePanel = new DrawPanel(game);
         gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
         pack();
-        playBackgroundMusic();
+        //playBackgroundMusic();
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -63,13 +63,16 @@ public class GameWindow extends JFrame {
             case KeyEvent.VK_P:
                 GameHandler.nextGame();
                 gamePanel.recalculateDimensions();
+                gamePanel.refetchPlayer();
                 break;
             case KeyEvent.VK_O:
                 GameHandler.lastGame();
                 gamePanel.recalculateDimensions();
+                gamePanel.refetchPlayer();
                 break;
             case KeyEvent.VK_R:
                 GameHandler.resetGame();
+                gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_W:

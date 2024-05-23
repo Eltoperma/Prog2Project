@@ -46,7 +46,7 @@ public class GameHandler {
         level.configure();
         game.setCurrentLevel(level);
 
-//        game.addPlayer();
+        game.addPlayer();
 
     }
 
