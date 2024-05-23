@@ -38,15 +38,15 @@ public class GameHandler {
         //System.out.println("init");
 //        game = new Game();
 
-        game = new Game();
+//        game = new Game();
 
-        new Levels();
+//        new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
         game.setCurrentLevel(level);
 
-        game.addPlayer();
+//        game.addPlayer();
 
     }
 

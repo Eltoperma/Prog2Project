@@ -55,7 +55,7 @@ public class Game {
 
     public void countTime(){
         Timer timer = new Timer();
-        GameTimerTask task = new GameTimerTask();
+        GameTimerTask task = new GameTimerTask(this);
 
         // Starte den Timer, die Aufgabe wird jede Sekunde ausgeführt
         timer.scheduleAtFixedRate(task, 0, 1000);
@@ -77,7 +77,7 @@ public class Game {
 
     public void addPlayer(){
         System.out.println("addPlayer: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
-        player = new Player(currentlevel.startingPosition, new Upgrade());
+        player = new Player(currentlevel.startingPosition, new Upgrade(), this);
     }
 
     public Player getPlayer() {
