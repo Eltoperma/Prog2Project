@@ -46,7 +46,7 @@ public class DrawPanel extends JPanel {
      * <strong>Only call this function on level changes and only when animations are done!</strong>
      */
     public void recalculateDimensions(){
-        gameDimensions = new Dimension(game.getCurrentlevel().height, game.getCurrentlevel().width);
+        gameDimensions = new Dimension(game.getCurrentlevel().width, game.getCurrentlevel().height);
         int width = getWidth();
         int height = getHeight();
 
@@ -72,7 +72,7 @@ public class DrawPanel extends JPanel {
         int elementSize = tileSize - (tileSize / 6);
         int elementOffset = (tileSize - elementSize) / 2;
         Position shadowOffset = new Position(0, 6);
-        Map<Position, Upgrades> upgrades = Game.currentlevel.upgrades;
+        Map<Position, Upgrades> upgrades = game.currentlevel.upgrades;
 
         for (int y = 0; y < gameDimensions.height; y++) {
             for (int x = 0; x < gameDimensions.width; x++) {

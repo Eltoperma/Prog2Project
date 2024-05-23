@@ -20,10 +20,10 @@ public class GameWindow extends JFrame {
 
 
     private MP3Player backgroundMusicPlayer;
-    private GamePanel gamePanel;
+    private DrawPanel gamePanel;
 
 
-    public GameWindow() {
+    public GameWindow(Game game) {
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
@@ -34,7 +34,7 @@ public class GameWindow extends JFrame {
         backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51,51,51));
-        gamePanel=  new GamePanel();
+        gamePanel=  new DrawPanel(game);
         gamePanel.setPreferredSize(new Dimension(1000,1000));
         add(gamePanel);
         pack();
@@ -58,18 +58,16 @@ public class GameWindow extends JFrame {
                 break;
             case KeyEvent.VK_P:
                 GameHandler.nextGame();
-                gamePanel.updatePanel();
+                gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_O:
                 GameHandler.lastGame();
-                gamePanel.updatePanel();
+                gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_R:
                 GameHandler.resetGame();
-                gamePanel.updatePanel();
+                gamePanel.recalculateDimensions();
                 break;
-            default:
-                gamePanel.controlGame(keyCode);
         }
 
     }

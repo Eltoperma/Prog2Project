@@ -29,7 +29,7 @@ public class GameHandler {
         game.addPlayer();
 
         SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow();
+            GameWindow window = new GameWindow(game);
             window.setVisible(true);
         });
     }
