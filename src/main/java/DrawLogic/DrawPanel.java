@@ -22,15 +22,13 @@ public class DrawPanel extends JPanel {
     private int tileSize;
     private Position playerPixelPosition;
     private Timer playerAnimationTimer;
-    private Position upgradeOffset;
-    private boolean isAnimationFinished = true;
+    public boolean isAnimationFinished = true;
 
     DrawPanel(Game game) {
         this.game = game;
         setSize(1000,1000);
         player = this.game.getPlayer();
         recalculateDimensions();
-        upgradeOffset = new Position((-(tileSize / 6)) / 2, tileSize - (tileSize / 6));
         startDrawEngine();
     }
 
@@ -62,7 +60,6 @@ public class DrawPanel extends JPanel {
 
     }
     public boolean movePlayer(Position from, Position to){
-        if(!isAnimationFinished) return false;
         isAnimationFinished = false;
         animatePlayerMovement(from, to);
         player.setPlayerPosition(to);
@@ -191,7 +188,7 @@ public class DrawPanel extends JPanel {
                     });
 
                     try {
-                        Thread.sleep(1000/120);
+                        Thread.sleep(12);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
