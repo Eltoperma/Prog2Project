@@ -16,6 +16,7 @@ public class Game {
     public  boolean isFinished = false;
 
     public Game(){
+        initLevelParams();
     }
 
     public  int getMovesCount() {
@@ -46,7 +47,6 @@ public class Game {
     public void setCurrentLevel(Level level){
         currentlevel = level;
         System.out.println("setCurrentLevel: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
-        initLevelParams();
     }
 
     public void initLevelParams(){
