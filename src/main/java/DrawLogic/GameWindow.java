@@ -28,19 +28,21 @@ public class GameWindow extends JFrame {
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
-        setBackground(Color.BLACK);
+        this.getContentPane().setBackground(Color.DARK_GRAY);
+        
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //backgroundMusicPlayer = new MP3Player(getSongs());
-        //backgroundMusicPlayer.setRepeat(true);
+        backgroundMusicPlayer = new MP3Player(getSongs());
+        backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51, 51, 51));
         gamePanel = new DrawPanel(game);
         gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
         pack();
-        //playBackgroundMusic();
+        playBackgroundMusic();
+        toggleMusic();
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -66,11 +68,13 @@ public class GameWindow extends JFrame {
                 GameHandler.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
+                gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_O:
                 GameHandler.lastGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
+                gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_R:
                 GameHandler.resetGame();

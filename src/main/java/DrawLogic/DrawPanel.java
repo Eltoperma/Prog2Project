@@ -22,6 +22,7 @@ public class DrawPanel extends JPanel {
     private int tileSize;
     private Position playerPixelPosition;
     private Timer playerAnimationTimer;
+    private int shadowSize, upgradeOffset;
     public boolean isAnimationFinished = true;
 
     DrawPanel(Game game) {
@@ -29,7 +30,7 @@ public class DrawPanel extends JPanel {
         setSize(1000,1000);
         player = this.game.getPlayer();
         recalculateDimensions();
-        startDrawEngine();
+        drawEngine(true);
     }
 
     @Override
@@ -43,6 +44,10 @@ public class DrawPanel extends JPanel {
     }
     public void setGame(Game game){
         this.game = game;
+    }
+    public void resetDrawEngine(){
+        drawEngine(false);
+        drawEngine(true);
     }
     /**
      * <strong>Only call this function on level changes and only when animations are done!</strong>
@@ -74,7 +79,7 @@ public class DrawPanel extends JPanel {
     private void drawGameField(Graphics graphics) {
         int elementSize = tileSize - (tileSize / 6);
         int elementOffset = (tileSize - elementSize) / 2;
-        Position objectOffsetFromShadow = new Position(0, 6);
+        int objectOffsetFromShadow = 6;
         Map<Position, Upgrades> upgrades = game.currentlevel.upgrades;
 
         for (int y = 0; y < gameDimensions.height; y++) {
@@ -82,8 +87,9 @@ public class DrawPanel extends JPanel {
                 graphics.drawImage(game.getCurrentlevel().tiles.get(new Position(x, y)).getImage(), x * tileSize, y * tileSize, tileSize, tileSize, null); //draw Tile
                 //rainElementAnimation(tiles.get(new Position(x,y)).getImage(),graphics,new Position(x,y),tileSize);
                 if (game.getCurrentlevel().upgrades.get(new Position(x, y)) == null) continue;
-                graphics.drawImage(MapUpgrade.getImage(), x * tileSize + elementOffset, y * tileSize+ elementOffset, elementSize, elementSize, null); //draw Upgradeshadow
-                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x, y))), x * tileSize - objectOffsetFromShadow.x + elementOffset, y * tileSize - objectOffsetFromShadow.y+elementOffset, elementSize, elementSize, null);//draw Upgrade
+                int shadowOffset = (tileSize - shadowSize) / 2;
+                graphics.drawImage(MapUpgrade.getImage(), x * tileSize + shadowOffset, y * tileSize+ shadowOffset, shadowSize, shadowSize, null); //draw Upgradeshadow
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x, y))), x * tileSize  + elementOffset, y * tileSize - objectOffsetFromShadow + upgradeOffset, elementSize, elementSize, null);//draw Upgrade
             }
         }
         //Draw goals
@@ -135,7 +141,7 @@ public class DrawPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (currentFrame >= animationFrameCount) {
+                if (currentFrame == animationFrameCount) {
                     if(playerAnimationTimer.isRunning()){
                         playerAnimationTimer.stop();
                         isAnimationFinished = true;
@@ -150,36 +156,36 @@ public class DrawPanel extends JPanel {
                     int y = oldPosInPixels.y + (int) (deltaY * easingMultiplier);
                     System.out.println(playerPixelPosition.x + " " + playerPixelPosition.y);
                     playerPixelPosition = new Position(x, y); // Update player's pixel position
-                    //repaint();
                     currentFrame++;
                 }
             }
         });
         playerAnimationTimer.start();
     }
-    private void startDrawEngine() {
-//        final double[] pixeloffset = {-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0)};
-//        final int[] currentStep = {0};
-//        final int[] countBy = {1};
+    private void drawEngine(boolean start) {
 
         Thread drawThread = new Thread(new Runnable() {
+            double[] pixeloffset = {-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0)};
+            int[] currentStep = {0};
+            int[] countBy = {1};
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
-//                    if (currentStep[0] <= 20 && currentStep[0] > 0) {
-//                        pixeloffset[0] *= 1.0001;
-//                        pixeloffset[1] *= 1.0001;
-//                    } else {
-//                        pixeloffset[0] *= 0.9999;
-//                        pixeloffset[1] *= 0.9999;
-//                    }
-//
-//                    if (currentStep[0] == 20 || currentStep[0] == -20) countBy[0] *= -1;
-//                    currentStep[0] -= countBy[0];
-//                    upgradeOffset.x = (int) pixeloffset[0];
-//                    upgradeOffset.y = (int) pixeloffset[1];
 
-                    // Ensure repaint is called on the EDT
+                    if (currentStep[0] <= 75 && currentStep[0] > 0) {
+                        pixeloffset[0] *= 1.008;
+                        pixeloffset[1] *= 1.0005;
+                    } else if(currentStep[0] >= -75 && currentStep[0] < 0) {
+                        pixeloffset[0] *= 0.992;
+                        pixeloffset[1] *= 0.9995;
+                    }
+
+                    if (currentStep[0] == 75 || currentStep[0] == -75) countBy[0] *= -1;
+                    currentStep[0] -= countBy[0];
+
+                    upgradeOffset = (int) pixeloffset[0];
+                    shadowSize = (int) pixeloffset[1];
+
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -195,9 +201,11 @@ public class DrawPanel extends JPanel {
                 }
             }
         });
-
+        if(!start) drawThread.interrupt();
         drawThread.start();
     }
+
+
 
 
 }
