@@ -10,6 +10,8 @@ import java.awt.*;
 public class Player {
     private Position playerPosition;
     private Game game;
+    private boolean hasPlaceholder = false;
+    private Direction placeholderDirection = null;
 
 
     public Upgrade getPlayerUpgrades() {
@@ -151,17 +153,40 @@ public class Player {
         if (game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
 
-//            Game.currentlevel.test();
+            game.currentlevel.test();
 
             if (game.currentlevel.upgrades.get(landOnPosition) == null && !game.currentlevel.tiles.get(landOnPosition).isGoal()) {
-                System.out.println("noUpgrade");
+                System.out.println("no Upgrade");
                 setPlayerPosition(landOnPosition);
                 game.updateMoves();
                 return;
             }
             //landing Position contains upgrade and is collectable
-            if (game.currentlevel.upgrades.get(landOnPosition) != null && !hasPlayerUpgradeOnDirection(direction)) {
-                System.out.println("collectUpgrade");
+            if (game.currentlevel.upgrades.get(landOnPosition) != null && (!hasPlayerUpgradeOnDirection(direction) || hasPlaceholder) && !game.currentlevel.upgrades.get(landOnPosition).equals(Upgrades.NONE)) {
+                System.out.println("collect Upgrade");
+                collectUpgrade(direction, landOnPosition);
+                setPlayerPosition(landOnPosition);
+                game.updateMoves();
+                return;
+            }
+
+            //landing Position contains upgrade and is movable
+            Position upgradePushPosition = calcPositionByPosAndDir(landOnPosition, direction);
+            System.out.println("pushPosition: posx: " + upgradePushPosition.x + " posy: " + upgradePushPosition.y);
+            System.out.println("landOnPosition: posx: " + landOnPosition.x + " posy: " + landOnPosition.y);
+
+            if (game.currentlevel.upgrades.get(landOnPosition) != null && (hasPlayerUpgradeOnDirection(direction) || ((!hasPlayerUpgradeOnDirection(direction)) && getUpgradeByDirection(direction).equals(Upgrades.NONE))) && !game.currentlevel.tiles.get(upgradePushPosition).getTileType().equals(TileType.WALL)
+                && !hasPlaceholder) {
+                System.out.println("move Upgrade");
+                Upgrades removedUpgrade = game.currentlevel.upgrades.remove(landOnPosition);
+                game.currentlevel.upgrades.put(upgradePushPosition, removedUpgrade);
+                setPlayerPosition(landOnPosition);
+                game.updateMoves();
+                return;
+            }
+            //landing Position contains none-upgrade and is collectable
+            if (game.currentlevel.upgrades.get(landOnPosition) != null && game.currentlevel.upgrades.get(landOnPosition).equals(Upgrades.NONE) && (hasPlayerUpgradeOnDirection(direction) || hasPlaceholder)) {
+                System.out.println("collect Upgrade");
                 collectUpgrade(direction, landOnPosition);
                 setPlayerPosition(landOnPosition);
                 game.updateMoves();
@@ -181,24 +206,79 @@ public class Player {
                 setPlayerPosition(landOnPosition);
                 return;
             }
-            throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht. Vllt ein Upgrade.");
+            throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht.");
 
         }
         throw new RuntimeException("Dort kann man sich nicht hinbewegen!");
     }
 
     private void collectUpgrade(Direction direction, Position pos) {
-        switch (direction) {
-            case UP -> playerUpgrades.upUpgrade = game.currentlevel.upgrades.get(pos);
-            case LEFT -> playerUpgrades.leftUpgrade = game.currentlevel.upgrades.get(pos);
-            case RIGHT -> playerUpgrades.rightUpgrade = game.currentlevel.upgrades.get(pos);
-            case DOWN -> playerUpgrades.downUpgrade = game.currentlevel.upgrades.get(pos);
-            default -> throw new RuntimeException("Invalides Upgrade!");
+        if(!hasPlaceholder) {
+        if(game.currentlevel.upgrades.get(pos).equals(Upgrades.PLACEHOLDER)){
+            hasPlaceholder = true;
+            placeholderDirection = direction;
         }
-        game.currentlevel.upgrades.remove(pos);
+            switch (direction) {
+                case UP -> playerUpgrades.upUpgrade = game.currentlevel.upgrades.get(pos);
+                case LEFT -> playerUpgrades.leftUpgrade = game.currentlevel.upgrades.get(pos);
+                case RIGHT -> playerUpgrades.rightUpgrade = game.currentlevel.upgrades.get(pos);
+                case DOWN -> playerUpgrades.downUpgrade = game.currentlevel.upgrades.get(pos);
+                default -> throw new RuntimeException("Invalides Upgrade!");
+            }
+            game.currentlevel.upgrades.remove(pos);
+        }
+        else{
+            switch (placeholderDirection) {
+                case UP -> playerUpgrades.upUpgrade = game.currentlevel.upgrades.get(pos);
+                case LEFT -> playerUpgrades.leftUpgrade = game.currentlevel.upgrades.get(pos);
+                case RIGHT -> playerUpgrades.rightUpgrade = game.currentlevel.upgrades.get(pos);
+                case DOWN -> playerUpgrades.downUpgrade = game.currentlevel.upgrades.get(pos);
+                default -> throw new RuntimeException("Invalides Upgrade!");
+            }
+            hasPlaceholder = false;
+            placeholderDirection = null;
+            game.currentlevel.upgrades.remove(pos);
+
+        }
     }
 
     public boolean canFinish(){
         return hasAllUpgrades();
+    }
+
+    public Position calcPositionByPosAndDir(Position pos, Direction dir){
+        System.out.println("calcMoveUpgrade: posx = " + pos.x + " posy= " + pos.y + ", dir = " + dir);
+        Position calculatedPos = new Position(pos.x, pos.y);
+        switch (dir){
+            case UP -> {
+                calculatedPos.y--;
+                return calculatedPos;
+            }
+            case DOWN -> {
+                calculatedPos.y++;
+                return calculatedPos;
+            }
+            case RIGHT -> {
+                calculatedPos.x++;
+                return calculatedPos;
+            }
+            case LEFT -> {
+                calculatedPos.x--;
+                return calculatedPos;
+            }
+            default -> {
+                throw new RuntimeException("Da ist etwas schiefgelaufen beim Positionsprüfen!!!");
+            }
+        }
+    }
+
+    public Upgrades getUpgradeByDirection(Direction direction){
+        switch(direction){
+            case UP -> { return playerUpgrades.upUpgrade; }
+            case DOWN -> { return playerUpgrades.downUpgrade; }
+            case LEFT -> { return playerUpgrades.leftUpgrade; }
+            case RIGHT -> { return playerUpgrades.rightUpgrade; }
+            default -> throw new RuntimeException("Invalides Upgrade!");
+        }
     }
 }

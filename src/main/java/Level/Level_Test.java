@@ -50,7 +50,7 @@ public class Level_Test extends Level {
     private void configureUpgrades() {
         //user input
         upgrades = new HashMap<>();
-        upgrades.put(new Position(2, 2), Upgrades.TWO);
+        upgrades.put(new Position(2, 3), Upgrades.TWO);
         upgrades.put(new Position(2, 7), Upgrades.ONE);
         upgrades.put(new Position(7, 2), Upgrades.THREE);
         upgrades.put(new Position(7, 7), Upgrades.TWO);
