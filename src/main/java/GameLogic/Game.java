@@ -2,6 +2,8 @@ package GameLogic;
 
 import Level.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -97,5 +99,14 @@ public class Game {
                 currentlevel.bestTime = timeCount;
             }
         }
+    }
+
+    public boolean allUpgradesCollected() {
+        for (Map.Entry<Position, Upgrades> entry : currentlevel.upgrades.entrySet()) {
+            if (entry.getValue() != null) {
+                return false;
+            }
+        }
+        return true;
     }
 }
