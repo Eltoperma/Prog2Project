@@ -206,10 +206,10 @@ public class Player {
                 setPlayerPosition(landOnPosition);
                 return;
             }
-            throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht.");
+//            throw new RuntimeException("Dort müsste man sich hinbewegen können, geht aber nicht.");
 
         }
-        throw new RuntimeException("Dort kann man sich nicht hinbewegen!");
+//        throw new RuntimeException("Dort kann man sich nicht hinbewegen!");
     }
 
     private void collectUpgrade(Direction direction, Position pos) {
@@ -243,7 +243,7 @@ public class Player {
     }
 
     public boolean canFinish(){
-        return hasAllUpgrades();
+        return hasAllUpgrades() || game.allUpgradesCollected();
     }
 
     public Position calcPositionByPosAndDir(Position pos, Direction dir){
