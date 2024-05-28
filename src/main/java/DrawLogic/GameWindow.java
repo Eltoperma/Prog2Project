@@ -68,13 +68,13 @@ public class GameWindow extends JFrame {
                 GameHandler.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
-                gamePanel.resetDrawEngine();
+                //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_O:
                 GameHandler.lastGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
-                gamePanel.resetDrawEngine();
+                //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_R:
                 GameHandler.resetGame();

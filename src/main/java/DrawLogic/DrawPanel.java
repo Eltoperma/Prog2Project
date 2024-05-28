@@ -24,11 +24,14 @@ public class DrawPanel extends JPanel {
     private Timer playerAnimationTimer;
     private int shadowSize, upgradeOffset;
     public boolean isAnimationFinished = true;
+    private double[] pixeloffset;
+    private boolean updatePixeloffset = false;
 
     DrawPanel(Game game) {
         this.game = game;
         setSize(1000,1000);
         player = this.game.getPlayer();
+        pixeloffset = new double[]{-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0),0,0};
         recalculateDimensions();
         drawEngine(true);
     }
@@ -63,6 +66,9 @@ public class DrawPanel extends JPanel {
         tileSize = Math.min(tileWidth, tileHeight);
         playerPixelPosition = calculatePixelPos(player.getPlayerPosition());
 
+        pixeloffset[2] = -(tileSize / 6.0) / 2;
+        pixeloffset[3] = tileSize - (tileSize / 6.0); //breaks animations but is implemented right since this should only really be called on level changes
+        updatePixeloffset = true;
     }
     public boolean movePlayer(Position from, Position to){
         isAnimationFinished = false;
@@ -70,6 +76,7 @@ public class DrawPanel extends JPanel {
         player.setPlayerPosition(to);
         return true;
     }
+
 
 
     private Position calculatePixelPos(Position pos) {
@@ -146,7 +153,7 @@ public class DrawPanel extends JPanel {
                         playerAnimationTimer.stop();
                         isAnimationFinished = true;
                         refetchPlayer();
-                        recalculateDimensions();
+                        //recalculateDimensions();
                     }
                 } else {
                     double t = (double) currentFrame / animationFrameCount;
@@ -165,12 +172,19 @@ public class DrawPanel extends JPanel {
     private void drawEngine(boolean start) {
 
         Thread drawThread = new Thread(new Runnable() {
-            double[] pixeloffset = {-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0)};
+
             int[] currentStep = {0};
             int[] countBy = {1};
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
+                    if(updatePixeloffset){
+                        pixeloffset[0] = pixeloffset[2];
+                        pixeloffset[1] = pixeloffset[3];
+                        updatePixeloffset = false;
+                        currentStep[0] = 0;
+                        countBy[0] = 1;
+                    }
 
                     if (currentStep[0] <= 75 && currentStep[0] > 0) {
                         pixeloffset[0] *= 1.008;
@@ -186,12 +200,7 @@ public class DrawPanel extends JPanel {
                     upgradeOffset = (int) pixeloffset[0];
                     shadowSize = (int) pixeloffset[1];
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            repaint();
-                        }
-                    });
+                    SwingUtilities.invokeLater(() -> repaint());
 
                     try {
                         Thread.sleep(12);
