@@ -176,7 +176,7 @@ public class Player {
             System.out.println("landOnPosition: posx: " + landOnPosition.x + " posy: " + landOnPosition.y);
 
             if (game.currentlevel.upgrades.get(landOnPosition) != null && (hasPlayerUpgradeOnDirection(direction) || ((!hasPlayerUpgradeOnDirection(direction)) && getUpgradeByDirection(direction).equals(Upgrades.NONE))) && !game.currentlevel.tiles.get(upgradePushPosition).getTileType().equals(TileType.WALL)
-                && !hasPlaceholder) {
+                    && !hasPlaceholder && game.currentlevel.upgrades.get(upgradePushPosition) == null) {
                 System.out.println("move Upgrade");
                 Upgrades removedUpgrade = game.currentlevel.upgrades.remove(landOnPosition);
                 game.currentlevel.upgrades.put(upgradePushPosition, removedUpgrade);
