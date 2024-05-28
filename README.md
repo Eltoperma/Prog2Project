@@ -1,3 +1,3 @@
-# Very Cool Title
+# UDLR Modify in Java Swing
 
-## we swaggin
+## Zum ausführen in IDE der wahl öffnen. Gradle build prozess abwarten und dann die main methode unter src/main/java/Main.java ausführen
