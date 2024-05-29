@@ -63,8 +63,6 @@ public class Level_3 extends Level{
         tiles.put(new Position(5, 8), new Tile(TileType.WALL));
         tiles.put(new Position(2, 9), new Tile(TileType.WALL));
 
-        tiles.put(new Position(9, 3), new Tile(TileType.STANDARD));
-
     }
     private void configureGoal() {
         setGoal(new Position(9, 3));

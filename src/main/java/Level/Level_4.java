@@ -50,9 +50,6 @@ public class Level_4 extends Level{
         fillWithStandards(new Position(2, 2), new Position(7, 4));
         fillWithStandards(new Position(3, 4), new Position(8, 6));
 
-       // tiles.put(new Position(5, 2), new Tile(TileType.WALL));
-
-        tiles.put(new Position(8, 4), new Tile(TileType.STANDARD));
 
     }
     private void configureGoal() {
