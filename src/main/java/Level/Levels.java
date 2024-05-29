@@ -12,6 +12,9 @@ public class Levels {
     public Levels(){
         levelList = new ArrayList<>();
         levelList.add(new Level_1());
+        levelList.add(new Level_2());
+        levelList.add(new Level_3());
+        levelList.add(new Level_4());
         levelList.add(new Level_20());
         levelList.add(new Level_Test());
 
