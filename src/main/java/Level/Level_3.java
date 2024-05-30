@@ -56,6 +56,7 @@ public class Level_3 extends Level{
 
         fillWithStandards(new Position(2, 2), new Position(9, 8));
         fillWithStandards(new Position(2, 2), new Position(7, 9));
+        tiles.put(new Position(9, 3), new Tile(TileType.STANDARD));
 
         tiles.put(new Position(8, 3), new Tile(TileType.WALL));
         tiles.put(new Position(10, 3), new Tile(TileType.WALL));

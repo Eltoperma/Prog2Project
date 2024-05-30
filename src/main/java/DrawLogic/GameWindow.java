@@ -29,7 +29,7 @@ public class GameWindow extends JFrame {
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
         this.getContentPane().setBackground(Color.DARK_GRAY);
-        
+
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -85,22 +85,47 @@ public class GameWindow extends JFrame {
                 game.getPlayer().move(Direction.UP);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
+                if(game.isFinished){
+                    GameHandler.nextGame();
+                    gamePanel.refetchPlayer();
+                    gamePanel.recalculateDimensions();
+                }
                 break;
             case KeyEvent.VK_D:
                 game.getPlayer().move(Direction.RIGHT);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
+                if(game.isFinished){
+                    GameHandler.nextGame();
+                    gamePanel.refetchPlayer();
+                    gamePanel.recalculateDimensions();
+                }
                 break;
             case KeyEvent.VK_S:
                 game.getPlayer().move(Direction.DOWN);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
+                if(game.isFinished){
+                    GameHandler.nextGame();
+                    gamePanel.refetchPlayer();
+                    gamePanel.recalculateDimensions();
+                }
                 break;
             case KeyEvent.VK_A:
                 game.getPlayer().move(Direction.LEFT);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
+                if(game.isFinished){
+                    GameHandler.nextGame();
+                    gamePanel.refetchPlayer();
+                    gamePanel.recalculateDimensions();
+                }
                 break;
+        }
+        if(game.isFinished){
+            GameHandler.nextGame();
+            gamePanel.refetchPlayer();
+            gamePanel.recalculateDimensions();
         }
 
     }

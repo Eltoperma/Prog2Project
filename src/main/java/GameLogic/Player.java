@@ -149,21 +149,21 @@ public class Player {
     public void adjustPosition(int xDiff, int yDiff, Direction direction) {
         Position landOnPosition = new Position((playerPosition.x + xDiff), (playerPosition.y + yDiff));
 
-        System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
+//        System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
         if (game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty
 
-            game.currentlevel.test();
+//            game.currentlevel.test();
 
             if (game.currentlevel.upgrades.get(landOnPosition) == null && !game.currentlevel.tiles.get(landOnPosition).isGoal()) {
-                System.out.println("no Upgrade");
+//                System.out.println("no Upgrade");
                 setPlayerPosition(landOnPosition);
                 game.updateMoves();
                 return;
             }
             //landing Position contains upgrade and is collectable
             if (game.currentlevel.upgrades.get(landOnPosition) != null && (!hasPlayerUpgradeOnDirection(direction) || hasPlaceholder) && !game.currentlevel.upgrades.get(landOnPosition).equals(Upgrades.NONE)) {
-                System.out.println("collect Upgrade");
+//                System.out.println("collect Upgrade");
                 collectUpgrade(direction, landOnPosition);
                 setPlayerPosition(landOnPosition);
                 game.updateMoves();
@@ -172,12 +172,12 @@ public class Player {
 
             //landing Position contains upgrade and is movable
             Position upgradePushPosition = calcPositionByPosAndDir(landOnPosition, direction);
-            System.out.println("pushPosition: posx: " + upgradePushPosition.x + " posy: " + upgradePushPosition.y);
-            System.out.println("landOnPosition: posx: " + landOnPosition.x + " posy: " + landOnPosition.y);
+//            System.out.println("pushPosition: posx: " + upgradePushPosition.x + " posy: " + upgradePushPosition.y);
+//            System.out.println("landOnPosition: posx: " + landOnPosition.x + " posy: " + landOnPosition.y);
 
             if (game.currentlevel.upgrades.get(landOnPosition) != null && (hasPlayerUpgradeOnDirection(direction) || ((!hasPlayerUpgradeOnDirection(direction)) && getUpgradeByDirection(direction).equals(Upgrades.NONE))) && !game.currentlevel.tiles.get(upgradePushPosition).getTileType().equals(TileType.WALL)
                     && !hasPlaceholder && game.currentlevel.upgrades.get(upgradePushPosition) == null) {
-                System.out.println("move Upgrade");
+//                System.out.println("move Upgrade");
                 Upgrades removedUpgrade = game.currentlevel.upgrades.remove(landOnPosition);
                 game.currentlevel.upgrades.put(upgradePushPosition, removedUpgrade);
                 setPlayerPosition(landOnPosition);
@@ -186,7 +186,7 @@ public class Player {
             }
             //landing Position contains none-upgrade and is collectable
             if (game.currentlevel.upgrades.get(landOnPosition) != null && game.currentlevel.upgrades.get(landOnPosition).equals(Upgrades.NONE) && (hasPlayerUpgradeOnDirection(direction) || hasPlaceholder)) {
-                System.out.println("collect Upgrade");
+//                System.out.println("collect Upgrade");
                 collectUpgrade(direction, landOnPosition);
                 setPlayerPosition(landOnPosition);
                 game.updateMoves();
@@ -247,7 +247,7 @@ public class Player {
     }
 
     public Position calcPositionByPosAndDir(Position pos, Direction dir){
-        System.out.println("calcMoveUpgrade: posx = " + pos.x + " posy= " + pos.y + ", dir = " + dir);
+//        System.out.println("calcMoveUpgrade: posx = " + pos.x + " posy= " + pos.y + ", dir = " + dir);
         Position calculatedPos = new Position(pos.x, pos.y);
         switch (dir){
             case UP -> {
