@@ -5,10 +5,12 @@ import GameLogic.*;
 import jaco.mp3.player.MP3Player;
 
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
+import java.io.Console;
 import java.io.File;
 
 import java.util.ArrayList;
@@ -85,48 +87,38 @@ public class GameWindow extends JFrame {
                 game.getPlayer().move(Direction.UP);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
-                if(game.isFinished){
-                    GameHandler.nextGame();
-                    gamePanel.refetchPlayer();
-                    gamePanel.recalculateDimensions();
-                }
                 break;
             case KeyEvent.VK_D:
                 game.getPlayer().move(Direction.RIGHT);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
-                if(game.isFinished){
-                    GameHandler.nextGame();
-                    gamePanel.refetchPlayer();
-                    gamePanel.recalculateDimensions();
-                }
                 break;
             case KeyEvent.VK_S:
                 game.getPlayer().move(Direction.DOWN);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
-                if(game.isFinished){
-                    GameHandler.nextGame();
-                    gamePanel.refetchPlayer();
-                    gamePanel.recalculateDimensions();
-                }
                 break;
             case KeyEvent.VK_A:
                 game.getPlayer().move(Direction.LEFT);
                 to = game.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
-                if(game.isFinished){
-                    GameHandler.nextGame();
-                    gamePanel.refetchPlayer();
-                    gamePanel.recalculateDimensions();
-                }
                 break;
         }
+        //Wait for Animation to finish
+        Timer waiter = new Timer(180, e -> {
+            System.out.println("TimerStarted");
+            if(gamePanel.isAnimationFinished){
+                System.out.println("Condition Met");
+                GameHandler.nextGame();
+                gamePanel.refetchPlayer();
+                gamePanel.recalculateDimensions();
+            }
+        });
         if(game.isFinished){
-            GameHandler.nextGame();
-            gamePanel.refetchPlayer();
-            gamePanel.recalculateDimensions();
+            waiter.setRepeats(false);
+            waiter.start();
         }
+
 
     }
 
