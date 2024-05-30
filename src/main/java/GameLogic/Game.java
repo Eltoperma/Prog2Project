@@ -13,9 +13,11 @@ public class Game {
     private  int movesCount;
     private  int timeCount;
     private Timer timer;
+    private final int BASE_SCORE = 10000;
+    private int currentScore;
     private GameTimerTask task;
 
-    public  boolean isFinished = false;
+    public boolean isFinished = false;
 
     public Game(){
         initLevelParams();
@@ -31,11 +33,14 @@ public class Game {
 
     public void updateMoves(){
         movesCount++;
+        currentScore = (int) (currentScore * 0.99);
         System.out.println("Move: " + movesCount);
     }
 
     public void updateTimer(){
         timeCount++;
+        currentScore = (int) (currentScore * 0.995);
+        System.out.println("Score: " + currentScore);
     }
 
     public long getTimeCount() {
@@ -49,11 +54,19 @@ public class Game {
     public void setCurrentLevel(Level level){
         currentlevel = level;
         System.out.println("setCurrentLevel: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
+        clearValues();
+        initLevelParams();
+    }
+
+    private void clearValues() {
+        timer.cancel();
     }
 
     public void initLevelParams(){
+        isFinished = false;
         movesCount = 0;
         timeCount = 0;
+        currentScore = BASE_SCORE;
         countTime();
     }
 
@@ -62,9 +75,7 @@ public class Game {
         task = new GameTimerTask(this);
 
         timer.scheduleAtFixedRate(task, 0, 1000);
-
     }
-
 
     public void addPlayer(){
         System.out.println("addPlayer: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
@@ -85,7 +96,7 @@ public class Game {
         System.out.println("Win du wichser");
         System.out.println("Moves: " + movesCount + " Zeit: " + timeCount);
         testForBestScore();
-        GameHandler.nextGame();
+//        GameHandler.nextGame();
     }
 
     private void testForBestScore() {
@@ -97,6 +108,10 @@ public class Game {
             if(timeCount < currentlevel.bestTime){
                 System.out.println("Neue Bestzeit!");
                 currentlevel.bestTime = timeCount;
+            }
+            if(currentScore > currentlevel. bestScore){
+                System.out.println("Neuer Highscore!");
+                currentlevel.bestScore = currentScore;
             }
         }
     }
