@@ -161,7 +161,7 @@ public class DrawPanel extends JPanel {
 
                     int x = oldPosInPixels.x + (int) (deltaX * easingMultiplier);
                     int y = oldPosInPixels.y + (int) (deltaY * easingMultiplier);
-                    System.out.println(playerPixelPosition.x + " " + playerPixelPosition.y);
+                    //System.out.println(playerPixelPosition.x + " " + playerPixelPosition.y);
                     playerPixelPosition = new Position(x, y); // Update player's pixel position
                     currentFrame++;
                 }
