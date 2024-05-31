@@ -30,7 +30,7 @@ public class GameWindow extends JFrame {
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
-        this.getContentPane().setBackground(Color.DARK_GRAY);
+        
 
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,6 +109,7 @@ public class GameWindow extends JFrame {
             System.out.println("TimerStarted");
             if(gamePanel.isAnimationFinished){
                 System.out.println("Condition Met");
+                game.getCurrentlevel().completed = true;
                 GameHandler.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
