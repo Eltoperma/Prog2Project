@@ -12,6 +12,7 @@ import java.util.Map;
 public abstract class Level {
 
     public String title;
+    public int ID = 0;
     public Map<Position, Tile> tiles;               //spielbare Fläche
     public Map<Position, Upgrades> upgrades;
     public int height;                              //inkl. unspielbarer Fläche
@@ -25,8 +26,6 @@ public abstract class Level {
     public Level(){
 
     }
-
-
     public void configure() {
     }
     public void addCheckPattern(){
