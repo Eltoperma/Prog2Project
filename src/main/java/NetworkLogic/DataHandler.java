@@ -1,22 +1,24 @@
 package NetworkLogic;
 
+import GameData.LevelData;
+import GameData.LevelUserData;
 import GameData.User;
+import Level.Level;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class NetworkHandler {
-    Scanner scanner = new Scanner(System.in);
-    User user;
+public class DataHandler {
+    private final Scanner scanner = new Scanner(System.in);
+    private static User user;
 
     public void init() {
         try {
-            if (isRegistered()) {
-                user = login();
-            } else {
+//            UserDataService.
+            if (!isRegistered()) {
                 register();
-                user = login();
             }
+            user = login();
         } catch (Exception e) {
             System.err.println("Fehler!");
         }
@@ -45,10 +47,8 @@ public class NetworkHandler {
 
             if(UserDataService.userExists(username)) throw new RuntimeException("Dieser Nutzer existiert bereits!");
 
-            String password = askPassword();
-
 //            scanner.nextLine();
-            User user = new User(username.trim(), password.trim());
+            User user = new User(username.trim());
             UserDataService.addUser(user);
         } catch (Exception e) {
             System.err.println("Etwas scheint nicht funktioniert zu haben: " + e.getMessage());
@@ -73,11 +73,10 @@ public class NetworkHandler {
 
             System.out.println("Eingegebener Benutzername: " + username);
 
-            System.out.println("Dein Passwort:");
-            String password = scanner.nextLine();
 
-            User user = fetchUser(username, password);
-            if(user == null) throw new RuntimeException("Dieser Nutzer existiert nicht!");
+            User user = fetchUser(username);
+            if(user == null) throw new RuntimeException("Benutzername wurde nicht gefunden!");
+            System.out.println("Herzlich Willkommen " + user.getUsername() + "!");
             return user;
         } catch (Exception e) {
             System.err.println("Etwas scheint nicht funktioniert zu haben: " + e.getMessage());
@@ -86,13 +85,52 @@ public class NetworkHandler {
         }
     }
 
-    public User fetchUser(String username, String password) {
+    public User fetchUser(String username) {
         try {
-            User user = UserDataService.authenticate(username, password);
+            User user = UserDataService.authenticate(username);
             return user;
         } catch (Exception e) {
-            System.err.println("Fehler beim Laden des Benutzers!");
+            System.err.println("Fehler beim Laden des Benutzers!" + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public LevelData fetchLevelData(int levelId){
+        try{
+            LevelData levelData = LevelDataService.loadLevelData(levelId);
+            System.out.println("LevelData: " + levelData.getLevelId() + " Highscore: " + levelData.getHighscore());
+            return levelData;
+        }
+        catch(Exception e){
+            throw new RuntimeException("fetchLevelDataError" + e.getMessage());
+        }
+    }
+
+    public void saveLevelUserData(Level level, int score) {
+        try{
+            LevelUserData levelUserData = new LevelUserData(true, score);
+            UserDataService.saveLevelUserData(user, level, levelUserData);
+        }
+        catch (Exception e){
+            System.err.println("Fehler beim Speichern von LevelUserData: " + e.getMessage());
+        }
+    }
+
+    public LevelUserData fetchLevelUserData(int levelId) {
+        try{
+            LevelUserData levelUserData = UserDataService.loadLevelUserData(levelId, user);
+            return levelUserData;
+        }
+        catch(NullPointerException npe){
+            return new LevelUserData(false, 0);
+        }
+        catch(Exception e){
+            throw new RuntimeException("Level Daten konnten nicht geladen werden: " + e.getMessage());
+        }
+    }
+
+    public void saveLevelData(int levelId, int highscore) {
+        LevelDataService.saveLevelData(levelId, user, highscore);
     }
 }

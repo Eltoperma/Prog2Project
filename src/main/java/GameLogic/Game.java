@@ -2,10 +2,8 @@ package GameLogic;
 
 import Level.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class Game {
     public Player player;
@@ -55,6 +53,7 @@ public class Game {
         currentlevel = level;
         System.out.println("setCurrentLevel: " + currentlevel.startingPosition + " class: " + currentlevel.getClass());
         clearValues();
+        currentlevel.bestScore = GameHandler.fetchLevelUserData(currentlevel.ID).getHighScore();
         initLevelParams();
     }
 
@@ -93,7 +92,6 @@ public class Game {
     public void finish(){
         isFinished = true;
         timer.cancel();
-        System.out.println("Win du wichser");
         System.out.println("Moves: " + movesCount + " Zeit: " + timeCount);
         testForBestScore();
 //        GameHandler.nextGame();
@@ -101,17 +99,21 @@ public class Game {
 
     private void testForBestScore() {
         if(isFinished) {
-            if(movesCount < currentlevel.bestMoves){
-                System.out.println("Neuer Rekord an Zügen!");
-                currentlevel.bestMoves = movesCount;
-            }
-            if(timeCount < currentlevel.bestTime){
-                System.out.println("Neue Bestzeit!");
-                currentlevel.bestTime = timeCount;
-            }
-            if(currentScore > currentlevel. bestScore){
+//            if(movesCount < currentlevel.bestMoves){
+//                System.out.println("Neuer Rekord an Zügen!");
+//                currentlevel.bestMoves = movesCount;
+//            }
+//            if(timeCount < currentlevel.bestTime){
+//                System.out.println("Neue Bestzeit!");
+//                currentlevel.bestTime = timeCount;
+//            }
+            if(currentScore > currentlevel.bestScore){
                 System.out.println("Neuer Highscore!");
                 currentlevel.bestScore = currentScore;
+                GameHandler.savePersonalHighScore(currentlevel, currentScore);
+            }
+            if(currentScore > GameHandler.fetchLevelData(currentlevel.ID).getHighscore()){
+                GameHandler.saveHighscore(currentlevel.ID, currentScore);
             }
         }
     }

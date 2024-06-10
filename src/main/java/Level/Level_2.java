@@ -15,6 +15,7 @@ public class Level_2 extends Level {
     public void configure() {
 
         //user input
+        ID = 2;
         height = 10;
         width = 10;
         startingPosition = new Position(3, 3);

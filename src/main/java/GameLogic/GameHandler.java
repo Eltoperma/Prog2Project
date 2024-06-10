@@ -1,7 +1,13 @@
 package GameLogic;
 
 import DrawLogic.GameWindow;
+import GameData.LevelData;
+import GameData.LevelUserData;
 import Level.*;
+import NetworkLogic.DataHandler;
+import NetworkLogic.LevelDataService;
+import NetworkLogic.LevelUserDataService;
+
 import javax.swing.*;
 
 
@@ -14,11 +20,13 @@ public class GameHandler {
     static ArrayList<Level> levelList;
     static Game game;
     static int levelNo = 1;
+    private static DataHandler dataHandler;
 
     public static void init(){
         //System.out.println("init");
 //        game = new Game();
 
+        dataHandler = new DataHandler();
         game = new Game();
         new Levels();
 
@@ -27,6 +35,7 @@ public class GameHandler {
         game.setCurrentLevel(level);
 
         game.addPlayer();
+
 
         SwingUtilities.invokeLater(() -> {
             GameWindow window = new GameWindow(game);
@@ -83,6 +92,19 @@ public class GameHandler {
     }
 
 
+    public static void savePersonalHighScore(Level level, int score) {
+        dataHandler.saveLevelUserData(level, score);
+    }
+    public static LevelData fetchLevelData(int levelId){
+        return dataHandler.fetchLevelData(levelId);
+    }
 
+    public static void saveHighscore(int levelId, int highscore){
+        dataHandler.saveLevelData(levelId, highscore);
+    }
 
+    public static LevelUserData fetchLevelUserData(int levelId) {
+        return dataHandler.fetchLevelUserData(levelId);
+
+    }
 }
