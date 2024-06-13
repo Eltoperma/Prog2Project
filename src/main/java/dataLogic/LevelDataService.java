@@ -1,4 +1,4 @@
-package NetworkLogic;
+package dataLogic;
 
 import GameData.LevelData;
 import GameData.User;

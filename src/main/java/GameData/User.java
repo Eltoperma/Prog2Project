@@ -1,7 +1,5 @@
 package GameData;
 
-import Level.Level;
-
 import java.util.HashMap;
 import java.util.Map;
 

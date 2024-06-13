@@ -4,14 +4,15 @@ import DrawLogic.GameWindow;
 import GameData.LevelData;
 import GameData.LevelUserData;
 import Level.*;
-import NetworkLogic.DataHandler;
-import NetworkLogic.LevelDataService;
-import NetworkLogic.LevelUserDataService;
+import dataLogic.DataHandler;
+import model.ModelHandler;
+import NetworkLogic.NetworkHandler;
 
 import javax.swing.*;
 
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class GameHandler {
@@ -21,13 +22,15 @@ public class GameHandler {
     static Game game;
     static int levelNo = 1;
     private static DataHandler dataHandler;
+    private static ModelHandler modelHandler;
+    private static NetworkHandler networkHandler;
+    private static Scanner scanner;
 
     public static void init(){
-        //System.out.println("init");
-//        game = new Game();
 
         dataHandler = new DataHandler();
         game = new Game();
+
         new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
@@ -35,12 +38,38 @@ public class GameHandler {
         game.setCurrentLevel(level);
 
         game.addPlayer();
+        scanner = new Scanner(System.in);
 
+        modelHandler = new ModelHandler();
+        if(isHost()){
+            modelHandler.setHost(true);
+        }
+        else if(isSpectator()){
+            modelHandler.setSpectator(true);
+        }
+        modelHandler.initGameState(game);
+
+
+        networkHandler = new NetworkHandler(modelHandler.isHost(), modelHandler.isSpectator());
 
         SwingUtilities.invokeLater(() -> {
             GameWindow window = new GameWindow(game);
             window.setVisible(true);
         });
+    }
+
+    private static boolean isHost() {
+        System.out.println("Wollen sie ein Spiel hosten?");
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        return input == 1;
+    }
+
+    private static boolean isSpectator() {
+        System.out.println("Wollen sie ein Spiel beobachten?");
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        return input == 1;
     }
 
     public static void initLvl(){
@@ -106,5 +135,13 @@ public class GameHandler {
     public static LevelUserData fetchLevelUserData(int levelId) {
         return dataHandler.fetchLevelUserData(levelId);
 
+    }
+
+    public static NetworkHandler getNetworkHandler() {
+        return networkHandler;
+    }
+
+    public static ModelHandler getModelHandler() {
+        return modelHandler;
     }
 }

@@ -1,5 +1,5 @@
 import GameLogic.GameHandler;
-import NetworkLogic.DataHandler;
+import dataLogic.DataHandler;
 
 public class Main {
     public static void main(String[] args) {

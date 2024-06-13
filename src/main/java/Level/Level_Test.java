@@ -14,6 +14,7 @@ public class Level_Test extends Level {
     public void configure() {
 
         //user input
+        ID = 1337;
         height = 10;
         width = 10;
         startingPosition = new Position(3, 3);

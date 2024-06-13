@@ -12,13 +12,13 @@ public class Player {
     private Game game;
     private boolean hasPlaceholder = false;
     private Direction placeholderDirection = null;
+    private Upgrade playerUpgrades;
 
 
     public Upgrade getPlayerUpgrades() {
         return playerUpgrades;
     }
 
-    private Upgrade playerUpgrades;
 
     public Player(Position position, Upgrade upgrades, Game game) {
         playerPosition = position;
@@ -43,6 +43,10 @@ public class Player {
             }
         }
         return state;
+    }
+
+    public boolean isHasPlaceholder() {
+        return hasPlaceholder;
     }
 
     public boolean hasAllUpgrades() {

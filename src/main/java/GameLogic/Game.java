@@ -31,17 +31,17 @@ public class Game {
 
     public void updateMoves(){
         movesCount++;
-        currentScore = (int) (currentScore * 0.99);
+        currentScore = (int) (currentScore * 0.98);
         System.out.println("Move: " + movesCount);
     }
 
     public void updateTimer(){
         timeCount++;
-        currentScore = (int) (currentScore * 0.995);
+        currentScore = (int) (currentScore * 0.992);
         System.out.println("Score: " + currentScore);
     }
 
-    public long getTimeCount() {
+    public int getTimeCount() {
         return timeCount;
     }
 
@@ -125,5 +125,29 @@ public class Game {
             }
         }
         return true;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setCurrentlevel(Level currentlevel) {
+        this.currentlevel = currentlevel;
+    }
+
+    public int getCurrentScore() {
+        return currentScore;
+    }
+
+    public void setCurrentScore(int currentScore) {
+        this.currentScore = currentScore;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(boolean finished) {
+        isFinished = finished;
     }
 }

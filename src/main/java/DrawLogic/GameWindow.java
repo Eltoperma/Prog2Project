@@ -5,17 +5,10 @@ import GameLogic.*;
 import jaco.mp3.player.MP3Player;
 
 
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.io.Console;
 import java.io.File;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.net.URL;
 
 
 public class GameWindow extends JFrame {
@@ -42,6 +35,7 @@ public class GameWindow extends JFrame {
         gamePanel = new DrawPanel(game);
         gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
+        gamePanel.grabFocus();
         pack();
         playBackgroundMusic();
         toggleMusic();
