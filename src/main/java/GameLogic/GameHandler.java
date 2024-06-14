@@ -23,16 +23,16 @@ public class GameHandler {
     public static DataHandler dataHandler;
 
     public static void init(){
-        //System.out.println("init");
-//        game = new Game();
-
         dataHandler = new DataHandler();
-
         SwingUtilities.invokeLater(() -> {
             LoginRegisterFrame registerFrame = new LoginRegisterFrame();
             registerFrame.setVisible(true);
         });
 
+
+
+    }
+    public static void openGameWindow(){
         game = new Game();
         new Levels();
 
@@ -41,8 +41,6 @@ public class GameHandler {
         game.setCurrentLevel(level);
         game.addPlayer();
 
-    }
-    public static void openGameWindow(){
         SwingUtilities.invokeLater(() -> {
             System.out.println("tried opening game Window");
             GameWindow window = new GameWindow(game);

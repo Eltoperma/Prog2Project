@@ -10,6 +10,25 @@ import java.util.concurrent.TimeUnit;
 
 public class DataHandler {
     private User user;
+    private String ip;
+    private boolean isHost;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
+    public void setHost(boolean host) {
+        isHost = host;
+    }
+
     public void setUser(User user){
         this.user = user;
     }
