@@ -1,12 +1,12 @@
 package GameLogic;
 
 import DrawLogic.GameWindow;
+import DrawLogic.LoginRegisterFrame;
 import GameData.LevelData;
 import GameData.LevelUserData;
 import Level.*;
 import NetworkLogic.DataHandler;
 import NetworkLogic.LevelDataService;
-import NetworkLogic.LevelUserDataService;
 
 import javax.swing.*;
 
@@ -20,28 +20,35 @@ public class GameHandler {
     static ArrayList<Level> levelList;
     static Game game;
     static int levelNo = 1;
-    private static DataHandler dataHandler;
+    public static DataHandler dataHandler;
 
     public static void init(){
-        //System.out.println("init");
-//        game = new Game();
-
         dataHandler = new DataHandler();
+        SwingUtilities.invokeLater(() -> {
+            LoginRegisterFrame registerFrame = new LoginRegisterFrame();
+            registerFrame.setVisible(true);
+        });
+
+
+
+    }
+    public static void openGameWindow(){
         game = new Game();
         new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
         game.setCurrentLevel(level);
-
         game.addPlayer();
 
-
         SwingUtilities.invokeLater(() -> {
+            System.out.println("tried opening game Window");
             GameWindow window = new GameWindow(game);
             window.setVisible(true);
         });
     }
+
+
 
     public static void initLvl(){
         //System.out.println("init");
