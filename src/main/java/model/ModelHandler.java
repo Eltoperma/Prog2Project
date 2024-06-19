@@ -11,14 +11,18 @@ public class ModelHandler {
         gameModel = new GameModel();
         gameModel = extractModelFromGame(game);
     }
-    public void updateGameState(Game game){
+    public GameModel updateGameState(Game game){
         gameModel = extractModelFromGame(game);
+        return gameModel;
     }
 
     public GameModel extractModelFromGame(Game game){
         GameModel extractedGameModel = new GameModel();
 
-        gameModel.setCurrentlevel(game.currentlevel);
+        System.out.println("extract: " + game.currentlevel.bestScore);
+        gameModel.setLevelModel(game.currentlevel);
+        System.out.println("extracted: " + gameModel.getLevelModel().bestScore);
+
         gameModel.setFinished(game.isFinished);
         gameModel.setPlayer(game.player);
         gameModel.setCurrentScore(game.getCurrentScore());

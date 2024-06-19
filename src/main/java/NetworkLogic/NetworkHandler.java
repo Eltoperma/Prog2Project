@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class NetworkHandler {
 
-    GameServer gameServer;
-    GameClient gameClient;
-    ModelHandler modelHandler;
+    private GameServer gameServer;
+    private GameClient gameClient;
+    private ModelHandler modelHandler;
 
     public NetworkHandler(boolean isHost, boolean isSpectator){
         modelHandler = GameHandler.getModelHandler();
@@ -24,13 +24,13 @@ public class NetworkHandler {
         }
         else if(isSpectator){
             try {
-                gameClient = new GameClient("10.25.0.230", 12345);
-            } catch (IOException e) {
+                gameClient = new GameClient("localhost", 41337);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
     public void updateGameState(GameModel gameModel) {
-
+        gameServer.setGameModel(gameModel);
     }
 }

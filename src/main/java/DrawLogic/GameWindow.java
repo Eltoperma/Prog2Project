@@ -3,6 +3,7 @@ package DrawLogic;
 
 import GameLogic.*;
 import jaco.mp3.player.MP3Player;
+import model.GameModel;
 
 
 import javax.swing.*;
@@ -16,10 +17,10 @@ public class GameWindow extends JFrame {
 
     private MP3Player backgroundMusicPlayer;
     private DrawPanel gamePanel;
-    private Game game;
+    private GameModel gameModel;
 
-    public GameWindow(Game game) {
-        this.game = game;
+    public GameWindow(GameModel gameModel) {
+        this.gameModel = gameModel;
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
@@ -32,7 +33,7 @@ public class GameWindow extends JFrame {
         backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51, 51, 51));
-        gamePanel = new DrawPanel(game);
+        gamePanel = new DrawPanel(gameModel);
         gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
         gamePanel.grabFocus();
@@ -50,7 +51,7 @@ public class GameWindow extends JFrame {
 
     private void controlWindow(int keyCode) {
         if(!gamePanel.isAnimationFinished) return;
-        Position from = game.getPlayer().getPlayerPosition();
+        Position from = gameModel.getPlayer().getPlayerPosition();
         Position to;
         switch (keyCode) {
             case KeyEvent.VK_M: {
@@ -78,23 +79,23 @@ public class GameWindow extends JFrame {
                 gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_W:
-                game.getPlayer().move(Direction.UP);
-                to = game.getPlayer().getPlayerPosition();
+                GameHandler.move(Direction.UP);
+                to = gameModel.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_D:
-                game.getPlayer().move(Direction.RIGHT);
-                to = game.getPlayer().getPlayerPosition();
+                GameHandler.move(Direction.RIGHT);
+                to = gameModel.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_S:
-                game.getPlayer().move(Direction.DOWN);
-                to = game.getPlayer().getPlayerPosition();
+                GameHandler.move(Direction.DOWN);
+                to = gameModel.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_A:
-                game.getPlayer().move(Direction.LEFT);
-                to = game.getPlayer().getPlayerPosition();
+                GameHandler.move(Direction.LEFT);
+                to = gameModel.getPlayer().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
         }
@@ -108,7 +109,7 @@ public class GameWindow extends JFrame {
                 gamePanel.recalculateDimensions();
             }
         });
-        if(game.isFinished){
+        if(gameModel.isFinished){
             waiter.setRepeats(false);
             waiter.start();
         }

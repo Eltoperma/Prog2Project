@@ -1,9 +1,9 @@
 package DrawLogic;
 
-import GameLogic.Game;
-import GameLogic.Player;
 import GameLogic.Position;
 import GameLogic.Upgrades;
+import model.GameModel;
+import model.PlayerModel;
 
 
 import javax.swing.*;
@@ -16,8 +16,8 @@ import java.util.Map;
 
 
 public class DrawPanel extends JPanel {
-    private Game game;
-    private Player player;
+    private GameModel gameModel;
+    private PlayerModel player;
     private Dimension gameDimensions;
     private int tileSize;
     private Position playerPixelPosition;
@@ -27,10 +27,10 @@ public class DrawPanel extends JPanel {
     private double[] pixeloffset;
     private boolean updatePixeloffset = false;
 
-    DrawPanel(Game game) {
-        this.game = game;
+    DrawPanel(GameModel gameModel) {
+        this.gameModel = gameModel;
         setSize(1000,1000);
-        player = this.game.getPlayer();
+        player = this.gameModel.getPlayer();
         pixeloffset = new double[]{-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0),0,0};
         recalculateDimensions();
         drawEngine(true);
@@ -43,10 +43,10 @@ public class DrawPanel extends JPanel {
     }
 
     public void refetchPlayer() {
-        player = game.getPlayer();
+        player = gameModel.getPlayer();
     }
-    public void setGame(Game game){
-        this.game = game;
+    public void setGameModel(GameModel gameModel){
+        this.gameModel = gameModel;
     }
     public void resetDrawEngine(){
         drawEngine(false);
@@ -56,7 +56,7 @@ public class DrawPanel extends JPanel {
      * <strong>Only call this function on level changes and only when animations are done!</strong>
      */
     public void recalculateDimensions(){
-        gameDimensions = new Dimension(game.getCurrentlevel().width, game.getCurrentlevel().height);
+        gameDimensions = new Dimension(gameModel.getLevelModel().width, gameModel.getLevelModel().height);
         int width = getWidth();
         int height = getHeight();
 
@@ -87,20 +87,20 @@ public class DrawPanel extends JPanel {
         int elementSize = tileSize - (tileSize / 6);
         int elementOffset = (tileSize - elementSize) / 2;
         int objectOffsetFromShadow = 6;
-        Map<Position, Upgrades> upgrades = game.currentlevel.upgrades;
+        Map<Position, Upgrades> upgrades = gameModel.getLevelModel().upgrades;
 
         for (int y = 0; y < gameDimensions.height; y++) {
             for (int x = 0; x < gameDimensions.width; x++) {
-                graphics.drawImage(game.getCurrentlevel().tiles.get(new Position(x, y)).getImage(), x * tileSize, y * tileSize, tileSize, tileSize, null); //draw Tile
+                graphics.drawImage(gameModel.getLevelModel().tiles.get(new Position(x, y)).getImage(), x * tileSize, y * tileSize, tileSize, tileSize, null); //draw Tile
                 //rainElementAnimation(tiles.get(new Position(x,y)).getImage(),graphics,new Position(x,y),tileSize);
-                if (game.getCurrentlevel().upgrades.get(new Position(x, y)) == null) continue;
+                if (gameModel.getLevelModel().upgrades.get(new Position(x, y)) == null) continue;
                 int shadowOffset = (tileSize - shadowSize) / 2;
                 graphics.drawImage(MapUpgrade.getImage(), x * tileSize + shadowOffset, y * tileSize+ shadowOffset, shadowSize, shadowSize, null); //draw Upgradeshadow
                 graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x, y))), x * tileSize  + elementOffset, y * tileSize - objectOffsetFromShadow + upgradeOffset, elementSize, elementSize, null);//draw Upgrade
             }
         }
         //Draw goals
-        ArrayList<Position> goal = game.currentlevel.finishPositions;
+        ArrayList<Position> goal = gameModel.getLevelModel().finishPositions;
         for (Position pos : goal) {
             if (player.hasAllUpgrades()) {
                 graphics.drawImage(Tile.getGoal(true), pos.x * tileSize, pos.y * tileSize, tileSize, tileSize, null);

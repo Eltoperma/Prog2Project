@@ -153,6 +153,8 @@ public class Player {
     public void adjustPosition(int xDiff, int yDiff, Direction direction) {
         Position landOnPosition = new Position((playerPosition.x + xDiff), (playerPosition.y + yDiff));
 
+        GameHandler.updateGameModel(game);
+
 //        System.out.println("IsPlayable: landOnPosition: " + landOnPosition.x + " " + landOnPosition.y);
         if (game.currentlevel.isPlayable(landOnPosition)) {
             //landing Position is empty

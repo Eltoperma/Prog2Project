@@ -13,8 +13,8 @@ public class LevelModel implements Serializable {
     public int ID = 0;
     public Map<Position, Tile> tiles;               //spielbare Fläche
     public Map<Position, Upgrades> upgrades;
-    public int height;                              //inkl. unspielbarer Fläche
-    public int width;                               //inkl. unspielbarer Fläche
+    public int height = 100;                              //inkl. unspielbarer Fläche
+    public int width = 100;                               //inkl. unspielbarer Fläche
     public Position startingPosition;
     public ArrayList<Position> finishPositions;
     public int bestScore = 0;

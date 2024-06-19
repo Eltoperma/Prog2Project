@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GameModel implements Serializable {
     private PlayerModel player;
-    private Level currentlevel;
+    private LevelModel levelModel;
     private  int movesCount;
     private int timeCount;
     private int currentScore;
@@ -19,6 +19,7 @@ public class GameModel implements Serializable {
 
     public GameModel(){
         player = new PlayerModel();
+        levelModel = new LevelModel();
     }
     private List<GameEventListener> listeners = new ArrayList<>();
 
@@ -53,12 +54,20 @@ public class GameModel implements Serializable {
         this.player.setHasPlaceholder(player.isHasPlaceholder());
     }
 
-    public Level getCurrentlevel() {
-        return currentlevel;
+    public LevelModel getLevelModel() {
+        return levelModel;
     }
 
-    public void setCurrentlevel(Level currentlevel) {
-        this.currentlevel = currentlevel;
+    public void setLevelModel(Level levelModel) {
+        this.levelModel.bestScore = levelModel.bestScore;
+        this.levelModel.ID = levelModel.ID;
+        this.levelModel.startingPosition = levelModel.startingPosition;
+        this.levelModel.upgrades = levelModel.upgrades;
+        this.levelModel.finishPositions = levelModel.finishPositions;
+        this.levelModel.height = levelModel.height;
+        this.levelModel.width = levelModel.width;
+        this.levelModel.tiles = levelModel.tiles;
+        this.levelModel.title = levelModel.title;
     }
 
     public int getMovesCount() {

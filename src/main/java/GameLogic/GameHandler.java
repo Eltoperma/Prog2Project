@@ -5,6 +5,7 @@ import GameData.LevelData;
 import GameData.LevelUserData;
 import Level.*;
 import dataLogic.DataHandler;
+import model.GameModel;
 import model.ModelHandler;
 import NetworkLogic.NetworkHandler;
 
@@ -41,19 +42,19 @@ public class GameHandler {
         scanner = new Scanner(System.in);
 
         modelHandler = new ModelHandler();
-        if(isHost()){
-            modelHandler.setHost(true);
-        }
-        else if(isSpectator()){
-            modelHandler.setSpectator(true);
-        }
-        modelHandler.initGameState(game);
+//        if(isHost()){
+        modelHandler.setHost(true);
+//        }
+//        else if(isSpectator()){
+//            modelHandler.setSpectator(true);
+//        }
 
+        modelHandler.initGameState(game);
 
         networkHandler = new NetworkHandler(modelHandler.isHost(), modelHandler.isSpectator());
 
         SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow(game);
+            GameWindow window = new GameWindow(modelHandler.getGameModel());
             window.setVisible(true);
         });
     }
@@ -73,18 +74,14 @@ public class GameHandler {
     }
 
     public static void initLvl(){
-        //System.out.println("init");
-//        game = new Game();
-
-//        game = new Game();
-
-//        new Levels();
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
         game.setCurrentLevel(level);
 
         game.addPlayer();
+
+        modelHandler.updateGameState(game);
 
     }
 
@@ -105,7 +102,7 @@ public class GameHandler {
             levelNo++;
             //ladebildschirm
             GameHandler.initLvl();
-
+            updateGameModel(game);
         }
     }
 
@@ -113,11 +110,13 @@ public class GameHandler {
         if(levelNo > 0){
             levelNo--;
             GameHandler.initLvl();
+            updateGameModel(game);
         }
     }
 
     public static void resetGame(){
         GameHandler.initLvl();
+        updateGameModel(game);
     }
 
 
@@ -143,5 +142,14 @@ public class GameHandler {
 
     public static ModelHandler getModelHandler() {
         return modelHandler;
+    }
+
+    public static void updateGameModel(Game game){
+        GameModel gameModel = modelHandler.updateGameState(game);
+        networkHandler.updateGameState(gameModel);
+    }
+
+    public static void move(Direction dir){
+        game.player.move(dir);
     }
 }
