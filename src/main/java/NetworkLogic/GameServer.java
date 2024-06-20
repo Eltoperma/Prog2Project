@@ -1,8 +1,9 @@
 package NetworkLogic;
 
-import GameLogic.GameController;
+import Level.Levels;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.GameModel;
-import model.ModelHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -11,15 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameServer {
-    private GameModel gameModel;
     private ServerSocket serverSocket;
-    private List<ObjectOutputStream> clientOutputs;
-    private ModelHandler modelHandler;
+    private List<PrintWriter> clientOutputs;
+    private Gson gson;
 
-    public GameServer(GameModel gameModel) throws IOException {
-        this.gameModel = gameModel;
-        serverSocket = new ServerSocket(41337); // Example port
+    public GameServer() throws IOException {
+        serverSocket = new ServerSocket(41337); // Beispiel-Port
         clientOutputs = new ArrayList<>();
+        gson = new GsonBuilder().create();
         new Thread(this::acceptClients).start();
         System.out.println("GameServer started on port " + getPort());
     }
@@ -33,58 +33,45 @@ public class GameServer {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-                ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-//                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 clientOutputs.add(out);
 
-                handleClient(out);
+                new Thread(() -> handleClient(out)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void handleClient(ObjectOutputStream out) {
+    private void handleClient(PrintWriter out) {
         try {
             while (true) {
-                // Send the current game state to the client
-                gameModel = GameController.getGameHandler().getGameModel();
-                System.out.println("Network GameModel: " + gameModel.getCurrentScore());
+                GameModel gameModel = createDummyGameModel(); // Dummy-Daten für das Beispiel
+                String json = gson.toJson(gameModel);
 
-                out.writeObject(gameModel);
-                out.flush(); // Ensure data is sent immediately
+                out.println(json);
+//                out.println("END_OF_MESSAGE");
+                System.out.println("Gesendeter JSON-String: " + json);
 
-//                GameModel clientGameModel = (GameModel) in.readObject();
-
-
-                // Print debug information
-                System.out.println("Server received game model: " + gameModel);
-
-                // Update all clients with the new game model
-                updateAllClients();
-
-
-                Thread.sleep(12);
+                Thread.sleep(1000); // Sendet alle 1 Sekunde neue Daten
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private GameModel createDummyGameModel() {
+        // Erzeugt ein Dummy-GameModel-Objekt für das Beispiel
+        GameModel gameModel = new GameModel(Levels.getLevel(0));
+        // Hier das GameModel entsprechend initialisieren
+        return gameModel;
+    }
+
+    public static void main(String[] args) {
+        try {
+            new GameServer();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
-    }
-
-    private void updateAllClients() {
-        for (ObjectOutputStream out : clientOutputs) {
-            try {
-                out.writeObject(gameModel);
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setGameModel(GameModel gm) {
-        this.gameModel = gm;
     }
 }

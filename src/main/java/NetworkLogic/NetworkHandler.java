@@ -17,7 +17,7 @@ public class NetworkHandler {
 
         if(isHost){
             try {
-                gameServer = new GameServer(modelHandler.getGameModel());
+                gameServer = new GameServer();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -31,6 +31,6 @@ public class NetworkHandler {
         }
     }
     public void updateGameState(GameModel gameModel) {
-        gameServer.setGameModel(gameModel);
+
     }
 }
