@@ -18,7 +18,7 @@ dependencies {
     implementation(files("lib/jaco-mp3-player-0.9.3.jar"));
     implementation("com.google.code.gson:gson:2.8.6");
 }
-
 tasks.test {
     useJUnitPlatform()
 }
+
