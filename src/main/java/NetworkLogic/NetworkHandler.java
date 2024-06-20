@@ -1,6 +1,6 @@
 package NetworkLogic;
 
-import GameLogic.GameHandler;
+import GameLogic.GameController;
 import model.GameModel;
 import model.ModelHandler;
 
@@ -13,7 +13,7 @@ public class NetworkHandler {
     private ModelHandler modelHandler;
 
     public NetworkHandler(boolean isHost, boolean isSpectator){
-        modelHandler = GameHandler.getModelHandler();
+        modelHandler = GameController.getModelHandler();
 
         if(isHost){
             try {

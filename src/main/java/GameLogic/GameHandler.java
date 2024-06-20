@@ -1,155 +1,108 @@
 package GameLogic;
 
-import DrawLogic.GameWindow;
-import GameData.LevelData;
-import GameData.LevelUserData;
-import Level.*;
-import dataLogic.DataHandler;
+import Level.Level;
+import java.util.Timer;
 import model.GameModel;
-import model.ModelHandler;
-import NetworkLogic.NetworkHandler;
-
-import javax.swing.*;
-
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
+import model.LevelModel;
+import model.PlayerModel;
 
 public class GameHandler {
+    private GameModel gameModel;
+    private Timer timer;
+    private GameTimerTask task;
+    private PlayerHandler playerHandler;
 
-    static Levels levels;
-    static ArrayList<Level> levelList;
-    static Game game;
-    static int levelNo = 1;
-    private static DataHandler dataHandler;
-    private static ModelHandler modelHandler;
-    private static NetworkHandler networkHandler;
-    private static Scanner scanner;
-
-    public static void init(){
-
-        dataHandler = new DataHandler();
-        game = new Game();
-
-        new Levels();
-
-        Level level = Levels.getLevel(levelNo - 1);
-        level.configure();
-        game.setCurrentLevel(level);
-
-        game.addPlayer();
-        scanner = new Scanner(System.in);
-
-        modelHandler = new ModelHandler();
-//        if(isHost()){
-        modelHandler.setHost(true);
-//        }
-//        else if(isSpectator()){
-//            modelHandler.setSpectator(true);
-//        }
-
-        modelHandler.initGameState(game);
-
-        networkHandler = new NetworkHandler(modelHandler.isHost(), modelHandler.isSpectator());
-
-        SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow(modelHandler.getGameModel());
-            window.setVisible(true);
-        });
+    public GameHandler(Level currentLevel) {
+        this.gameModel = new GameModel(currentLevel);
+        playerHandler = new PlayerHandler(this);
+        gameModel.setUsername(GameController.fetchUsername());
+        initLevelParams();
     }
 
-    private static boolean isHost() {
-        System.out.println("Wollen sie ein Spiel hosten?");
-        int input = scanner.nextInt();
-        scanner.nextLine();
-        return input == 1;
+    public GameModel getGameModel() {
+        return gameModel;
     }
 
-    private static boolean isSpectator() {
-        System.out.println("Wollen sie ein Spiel beobachten?");
-        int input = scanner.nextInt();
-        scanner.nextLine();
-        return input == 1;
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
     }
 
-    public static void initLvl(){
-
-        Level level = Levels.getLevel(levelNo - 1);
-        level.configure();
-        game.setCurrentLevel(level);
-
-        game.addPlayer();
-
-        modelHandler.updateGameState(game);
-
+    public void setCurrentLevel(Level level) {
+        gameModel.setLevelModel(new LevelModel(level));
+        clearValues();
+        gameModel.getLevelModel().setBestScore(GameController.fetchLevelUserData(level.getID()).getHighScore());
+        initLevelParams();
     }
 
-    public static Levels getLevels() {
-        return levels;
+    public LevelModel getCurrentLevel(){
+        return gameModel.getLevelModel();
     }
 
-    public static ArrayList<Level> getLevelList() {
-        return levelList;
+    public void addPlayerOnInit() {
+
+        gameModel.setPlayerModel(new PlayerModel(gameModel.getLevelModel().getStartingPosition()));
+        playerHandler.setPlayerModel(gameModel.getPlayerModel());
+//        gameModel.getPlayerModel().setPlayerPosition(gameModel.getLevelModel().getStartingPosition());
+        System.out.println("addPlayer: " + gameModel.getLevelModel().getStartingPosition() + " class: " + gameModel.getLevelModel().getClass());
     }
 
-    public static Game getGame() {
-        return game;
+    public void updateMoves() {
+        gameModel.setMovesCount(gameModel.getMovesCount() + 1);
+        gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.98));
+        System.out.println("Move: " + gameModel.getMovesCount());
     }
 
-    public static void nextGame(){
-        if(levelNo < Levels.levelList.size()) {
-            levelNo++;
-            //ladebildschirm
-            GameHandler.initLvl();
-            updateGameModel(game);
+    public void updateTimer() {
+        gameModel.setTimeCount(gameModel.getTimeCount() + 1);
+        gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.992));
+        System.out.println("Score: " + gameModel.getCurrentScore());
+    }
+
+    public void finish() {
+        gameModel.setFinished(true);
+        timer.cancel();
+        System.out.println("Moves: " + gameModel.getMovesCount() + " Zeit: " + gameModel.getTimeCount());
+        testForBestScore();
+    }
+
+    private void testForBestScore() {
+        if (gameModel.isFinished()) {
+            if (gameModel.getCurrentScore() > gameModel.getLevelModel().getBestScore()) {
+                System.out.println("Neuer Highscore!");
+                gameModel.getLevelModel().setBestScore(gameModel.getCurrentScore());
+                GameController.savePersonalHighScore(gameModel.getLevelModel(), gameModel.getCurrentScore());
+            }
+            if (gameModel.getCurrentScore() > GameController.fetchLevelData(gameModel.getLevelModel().getID()).getHighscore()) {
+                GameController.saveHighscore(gameModel.getLevelModel().getID(), gameModel.getCurrentScore());
+            }
         }
     }
 
-    public static void lastGame(){
-        if(levelNo > 0){
-            levelNo--;
-            GameHandler.initLvl();
-            updateGameModel(game);
+    private void clearValues() {
+        if (timer != null) {
+            timer.cancel();
         }
     }
 
-    public static void resetGame(){
-        GameHandler.initLvl();
-        updateGameModel(game);
+    public void initLevelParams() {
+        gameModel.setFinished(false);
+        gameModel.setMovesCount(0);
+        gameModel.setTimeCount(0);
+        gameModel.setCurrentScore(gameModel.getBASE_SCORE());
+        countTime();
     }
 
-
-    public static void savePersonalHighScore(Level level, int score) {
-        dataHandler.saveLevelUserData(level, score);
-    }
-    public static LevelData fetchLevelData(int levelId){
-        return dataHandler.fetchLevelData(levelId);
+    public void countTime() {
+        timer = new Timer();
+        task = new GameTimerTask(this);
+        timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    public static void saveHighscore(int levelId, int highscore){
-        dataHandler.saveLevelData(levelId, highscore);
+    public PlayerHandler getPlayerHandler() {
+        return playerHandler;
     }
 
-    public static LevelUserData fetchLevelUserData(int levelId) {
-        return dataHandler.fetchLevelUserData(levelId);
-
-    }
-
-    public static NetworkHandler getNetworkHandler() {
-        return networkHandler;
-    }
-
-    public static ModelHandler getModelHandler() {
-        return modelHandler;
-    }
-
-    public static void updateGameModel(Game game){
-        GameModel gameModel = modelHandler.updateGameState(game);
-        networkHandler.updateGameState(gameModel);
-    }
-
-    public static void move(Direction dir){
-        game.player.move(dir);
+    public void setPlayer(PlayerHandler playerHandler) {
+        this.playerHandler = playerHandler;
     }
 }

@@ -1,73 +1,47 @@
 package model;
 
-import events.*;
+import java.io.Serializable;
+import java.util.Map;
 import GameLogic.Direction;
-import GameLogic.Player;
+import GameLogic.Upgrades;
+import GameLogic.Position;
 import Level.Level;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameModel implements Serializable {
-    private PlayerModel player;
+    private PlayerModel playerModel;
     private LevelModel levelModel;
-    private  int movesCount;
+    private int movesCount;
     private int timeCount;
     private int currentScore;
-    public boolean isFinished = false;
+    private boolean isFinished;
+    private final int BASE_SCORE = 10000;
 
-    public GameModel(){
-        player = new PlayerModel();
-        levelModel = new LevelModel();
-    }
-    private List<GameEventListener> listeners = new ArrayList<>();
 
-    public void addGameEventListener(GameEventListener listener) {
-        listeners.add(listener);
-    }
+    private String username;
 
-    public void removeGameEventListener(GameEventListener listener) {
-        listeners.remove(listener);
-    }
-
-    private void notifyListeners(GameEvent event) {
-        for (GameEventListener listener : listeners) {
-            listener.handleGameEvent(event);
-        }
+    public GameModel(Level currentLevel) {
+        this.playerModel = new PlayerModel(currentLevel.startingPosition);
+        this.levelModel = new LevelModel(currentLevel);
+        this.movesCount = 0;
+        this.timeCount = 0;
+        this.currentScore = BASE_SCORE;
+        this.isFinished = false;
     }
 
-    public void movePlayer(Direction direction) {
-        // Spiel-Logik zum Bewegen des Spielers
-        System.out.println("Player moved " + direction);
-        notifyListeners(new GameEvent(this, EventType.PLAYER_MOVED, direction));
-
+    public PlayerModel getPlayerModel() {
+        return playerModel;
     }
 
-    public PlayerModel getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player.setPlayerPosition(player.getPlayerPosition());
-        this.player.setPlayerUpgrades(player.getPlayerUpgrades());
-        this.player.setHasPlaceholder(player.isHasPlaceholder());
+    public void setPlayerModel(PlayerModel playerModel) {
+        this.playerModel = playerModel;
     }
 
     public LevelModel getLevelModel() {
         return levelModel;
     }
 
-    public void setLevelModel(Level levelModel) {
-        this.levelModel.bestScore = levelModel.bestScore;
-        this.levelModel.ID = levelModel.ID;
-        this.levelModel.startingPosition = levelModel.startingPosition;
-        this.levelModel.upgrades = levelModel.upgrades;
-        this.levelModel.finishPositions = levelModel.finishPositions;
-        this.levelModel.height = levelModel.height;
-        this.levelModel.width = levelModel.width;
-        this.levelModel.tiles = levelModel.tiles;
-        this.levelModel.title = levelModel.title;
+    public void setLevelModel(LevelModel levelModel) {
+        this.levelModel = levelModel;
     }
 
     public int getMovesCount() {
@@ -102,15 +76,30 @@ public class GameModel implements Serializable {
         isFinished = finished;
     }
 
-    public List<GameEventListener> getListeners() {
-        return listeners;
+
+
+    public void movePlayer(Direction direction) {
+        // Spiel-Logik zum Bewegen des Spielers
+        System.out.println("Player moved " + direction);
     }
 
-    public void setListeners(List<GameEventListener> listeners) {
-        this.listeners = listeners;
+    public boolean allUpgradesCollected() {
+        for (Map.Entry<Position, Upgrades> entry : levelModel.getUpgrades().entrySet()) {
+            if (entry.getValue() != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public void setPlayer(PlayerModel player) {
-        this.player = player;
+    public int getBASE_SCORE() {
+        return BASE_SCORE;
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

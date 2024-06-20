@@ -56,19 +56,22 @@ public class GameClient {
     public static void main(String[] args) {
         GameClient gameClient = new GameClient("localhost", 41337); // Beispiel-Host und Port
 
-        // Beispiel für Datenübertragung
+        try {
+            GameModel receivedGameModel;
+            while (true) {
+                receivedGameModel = gameClient.receiveGameModel();
+                if (receivedGameModel != null) {
 
-        GameModel receivedGameModel = gameClient.receiveGameModel();
-        while(true) {
-            if (receivedGameModel != null) {
-                // Verarbeitung der empfangenen Daten
-                System.out.println("Empfangenes Spielmodell: " + receivedGameModel + " score: " + receivedGameModel.getCurrentScore());
+                    System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
+                    System.out.println("Score: " + receivedGameModel.getCurrentScore());
+                    System.out.println("Spieler: " + receivedGameModel.getUsername());
+                    System.out.println("PosX: " + receivedGameModel.getPlayerModel().getPlayerPosition().x);
+                } else {
+                    break;
+                }
             }
-            else{
-                break;
-            }
+        } finally {
+            gameClient.close();
         }
-
-        gameClient.close();
     }
 }

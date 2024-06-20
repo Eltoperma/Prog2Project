@@ -4,6 +4,7 @@ import GameData.LevelData;
 import GameData.LevelUserData;
 import GameData.User;
 import Level.Level;
+import model.LevelModel;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +108,7 @@ public class DataHandler {
         }
     }
 
-    public void saveLevelUserData(Level level, int score) {
+    public void saveLevelUserData(LevelModel level, int score) {
         try{
             LevelUserData levelUserData = new LevelUserData(true, score);
             UserDataService.saveLevelUserData(user, level, levelUserData);
@@ -132,5 +133,9 @@ public class DataHandler {
 
     public void saveLevelData(int levelId, int highscore) {
         LevelDataService.saveLevelData(levelId, user, highscore);
+    }
+
+    public String getUsername(){
+        return user.getUsername();
     }
 }

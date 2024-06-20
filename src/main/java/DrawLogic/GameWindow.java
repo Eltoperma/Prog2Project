@@ -51,7 +51,7 @@ public class GameWindow extends JFrame {
 
     private void controlWindow(int keyCode) {
         if(!gamePanel.isAnimationFinished) return;
-        Position from = gameModel.getPlayer().getPlayerPosition();
+        Position from = gameModel.getPlayerModel().getPlayerPosition();
         Position to;
         switch (keyCode) {
             case KeyEvent.VK_M: {
@@ -62,40 +62,41 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
             case KeyEvent.VK_P:
-                GameHandler.nextGame();
+                GameController.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_O:
-                GameHandler.lastGame();
+                GameController.lastGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_R:
-                GameHandler.resetGame();
+                GameController.resetGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_W:
-                GameHandler.move(Direction.UP);
-                to = gameModel.getPlayer().getPlayerPosition();
+                GameController.move(Direction.UP);
+                to = gameModel.getPlayerModel().getPlayerPosition();
+                System.out.println("GameWindow Move: from = " + from.x + " " + from.y + " to " + to.x + " " + to.y);
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_D:
-                GameHandler.move(Direction.RIGHT);
-                to = gameModel.getPlayer().getPlayerPosition();
+                GameController.move(Direction.RIGHT);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_S:
-                GameHandler.move(Direction.DOWN);
-                to = gameModel.getPlayer().getPlayerPosition();
+                GameController.move(Direction.DOWN);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_A:
-                GameHandler.move(Direction.LEFT);
-                to = gameModel.getPlayer().getPlayerPosition();
+                GameController.move(Direction.LEFT);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
         }
@@ -104,12 +105,12 @@ public class GameWindow extends JFrame {
             System.out.println("TimerStarted");
             if(gamePanel.isAnimationFinished){
                 System.out.println("Condition Met");
-                GameHandler.nextGame();
+                GameController.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
             }
         });
-        if(gameModel.isFinished){
+        if(gameModel.isFinished()){
             waiter.setRepeats(false);
             waiter.start();
         }

@@ -1,6 +1,6 @@
 package events;
 
-import GameLogic.GameHandler;
+import GameLogic.GameController;
 import model.ModelHandler;
 import NetworkLogic.NetworkHandler;
 
@@ -8,8 +8,8 @@ public class GameEventListener {
     NetworkHandler networkHandler;
     ModelHandler modelHandler;
     public GameEventListener(){
-        networkHandler = GameHandler.getNetworkHandler();
-        modelHandler = GameHandler.getModelHandler();
+        networkHandler = GameController.getNetworkHandler();
+        modelHandler = GameController.getModelHandler();
     }
     public void handleGameEvent(GameEvent event) {
         this.networkHandler.updateGameState(modelHandler.getGameModel());

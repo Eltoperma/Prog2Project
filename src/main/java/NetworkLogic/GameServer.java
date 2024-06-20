@@ -1,6 +1,8 @@
 package NetworkLogic;
 
+import GameLogic.GameController;
 import model.GameModel;
+import model.ModelHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -12,6 +14,7 @@ public class GameServer {
     private GameModel gameModel;
     private ServerSocket serverSocket;
     private List<ObjectOutputStream> clientOutputs;
+    private ModelHandler modelHandler;
 
     public GameServer(GameModel gameModel) throws IOException {
         this.gameModel = gameModel;
@@ -31,33 +34,42 @@ public class GameServer {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+//                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
                 clientOutputs.add(out);
-                handleClient(in, out);
+
+                handleClient(out);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void handleClient(ObjectInputStream in, ObjectOutputStream out) {
+    private void handleClient(ObjectOutputStream out) {
         try {
             while (true) {
                 // Send the current game state to the client
+                gameModel = GameController.getGameHandler().getGameModel();
+                System.out.println("Network GameModel: " + gameModel.getCurrentScore());
+
                 out.writeObject(gameModel);
                 out.flush(); // Ensure data is sent immediately
 
-                // Receive the updated game model from the client
-                gameModel = (GameModel) in.readObject();
+//                GameModel clientGameModel = (GameModel) in.readObject();
+
 
                 // Print debug information
                 System.out.println("Server received game model: " + gameModel);
 
                 // Update all clients with the new game model
                 updateAllClients();
+
+
+                Thread.sleep(12);
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

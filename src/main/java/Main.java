@@ -1,4 +1,4 @@
-import GameLogic.GameHandler;
+import GameLogic.GameController;
 import dataLogic.DataHandler;
 
 public class Main {
@@ -6,6 +6,6 @@ public class Main {
         System.setProperty("sun.java2d.uiScale", "1");
         DataHandler dataHandler = new DataHandler();
         dataHandler.init();
-        GameHandler.init();
+        GameController.init();
     }
 }

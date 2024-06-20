@@ -18,6 +18,7 @@ import java.util.Map;
 import java.io.File;
 
 import Level.Level;
+import model.LevelModel;
 
 public class UserDataService {
     private static final String FILE_PATH = "data/user/userData.json";
@@ -95,9 +96,9 @@ public class UserDataService {
         return null;
     }
 
-    public static void saveLevelUserData(User user, Level level, LevelUserData levelUserData){
+    public static void saveLevelUserData(User user, LevelModel level, LevelUserData levelUserData){
         Map<Integer, LevelUserData> levelUserDataMap = user.getLevelData();
-        levelUserDataMap.put(level.ID, levelUserData);
+        levelUserDataMap.put(level.getID(), levelUserData);
         user.setLevelData(levelUserDataMap);
 
         editUserLevelData(user);

@@ -1,8 +1,9 @@
 package GameLogic;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Position {
+public class Position implements Serializable {
     public int x,y;
     public Position(int x, int y){
         this.x = x;

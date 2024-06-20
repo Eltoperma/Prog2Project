@@ -1,5 +1,6 @@
 package model;
 
+import GameLogic.Direction;
 import GameLogic.Position;
 import GameLogic.Upgrade;
 import GameLogic.Upgrades;
@@ -12,6 +13,13 @@ public class PlayerModel implements Serializable {
     private Position playerPosition;
     private boolean hasPlaceholder = false;
     private Upgrade playerUpgrades;
+    private Direction placeholderDirection = null;
+
+    public PlayerModel(Position pos){
+        playerUpgrades = new Upgrade();
+        playerPosition = pos;
+
+    }
 
     public Position getPlayerPosition() {
         return playerPosition;
@@ -63,5 +71,13 @@ public class PlayerModel implements Serializable {
             }
             default -> throw new RuntimeException();
         }
+    }
+
+    public Direction getPlaceholderDirection() {
+        return placeholderDirection;
+    }
+
+    public void setPlaceholderDirection(Direction placeholderDirection) {
+        this.placeholderDirection = placeholderDirection;
     }
 }
