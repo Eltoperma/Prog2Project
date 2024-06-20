@@ -1,5 +1,6 @@
 package NetworkLogic;
 
+import GameLogic.GameController;
 import Level.Levels;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,8 +17,8 @@ public class GameServer {
     private List<PrintWriter> clientOutputs;
     private Gson gson;
 
-    public GameServer() throws IOException {
-        serverSocket = new ServerSocket(41337); // Beispiel-Port
+    public GameServer(int PORT) throws IOException {
+        serverSocket = new ServerSocket(PORT); // Beispiel-Port
         clientOutputs = new ArrayList<>();
         gson = new GsonBuilder().create();
         new Thread(this::acceptClients).start();
@@ -46,14 +47,14 @@ public class GameServer {
     private void handleClient(PrintWriter out) {
         try {
             while (true) {
-                GameModel gameModel = createDummyGameModel(); // Dummy-Daten für das Beispiel
+                GameModel gameModel = GameController.getGameHandler().getGameModel();
                 String json = gson.toJson(gameModel);
 
                 out.println(json);
-//                out.println("END_OF_MESSAGE");
+                out.println("END_OF_MESSAGE"); // Signalisiert das Ende der JSON-Nachricht
                 System.out.println("Gesendeter JSON-String: " + json);
 
-                Thread.sleep(1000); // Sendet alle 1 Sekunde neue Daten
+                Thread.sleep(12);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -69,7 +70,7 @@ public class GameServer {
 
     public static void main(String[] args) {
         try {
-            new GameServer();
+            new GameServer(41337);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -34,12 +34,10 @@ public class GameClient {
             while ((line = reader.readLine()) != null) {
                 jsonBuilder.append(line);
                 System.out.println("Empfangene Zeile: " + line); // Debug-Ausgabe
-//                if ((line.equals("END_OF_MESSAGE"))){
-//                    break;
-//                }
-                String json = jsonBuilder.toString();
-                GameModel gameModel = gson.fromJson(json, GameModel.class);
-                System.out.println("Score: " + gameModel.getCurrentScore());
+                // End of JSON message identified by END_OF_MESSAGE
+                if (line.contains("END_OF_MESSAGE")) {
+                    break;
+                }
             }
 
             String json = jsonBuilder.toString();
@@ -56,8 +54,6 @@ public class GameClient {
         }
     }
 
-
-
     public void close() {
         try {
             reader.close();
@@ -69,7 +65,7 @@ public class GameClient {
     }
 
     public static void main(String[] args) {
-        GameClient gameClient = new GameClient("localhost", 41337); // Beispiel-Host und Port
+        GameClient gameClient = new GameClient("10.10.0.53", 41337); // Beispiel-Host und Port
 
         // Beispiel für Datenübertragung und Verarbeitung
         GameModel receivedGameModel = gameClient.receiveGameModel();

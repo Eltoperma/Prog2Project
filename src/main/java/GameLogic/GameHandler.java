@@ -38,7 +38,7 @@ public class GameHandler {
         return gameModel.getLevelModel();
     }
 
-    public void addPlayerOnInit() {
+    public void addPlayer() {
 
         gameModel.setPlayerModel(new PlayerModel(gameModel.getLevelModel().getStartingPosition()));
         playerHandler.setPlayerModel(gameModel.getPlayerModel());

@@ -8,6 +8,7 @@ import dataLogic.DataHandler;
 import model.LevelModel;
 import model.ModelHandler;
 import NetworkLogic.NetworkHandler;
+import DrawLogic.LoginRegisterFrame;
 
 import javax.swing.*;
 
@@ -28,50 +29,12 @@ public class GameController {
     private static Scanner scanner;
 
     public static void init(){
-
         dataHandler = new DataHandler();
-
-        new Levels();
-
-        Level level = Levels.getLevel(levelNo - 1);
-        level.configure();
-        gameHandler = new GameHandler(level);
-        gameHandler.setCurrentLevel(level);
-
-        gameHandler.addPlayerOnInit();
-        scanner = new Scanner(System.in);
-
-        modelHandler = new ModelHandler();
-        modelHandler.setGameModel(gameHandler.getGameModel());
-//        if(isHost()){
-        modelHandler.setHost(true);
-//        }
-//        else if(isSpectator()){
-//            modelHandler.setSpectator(true);
-//        }
-
-//        modelHandler.initGameState(game);
-
-        networkHandler = new NetworkHandler(modelHandler.isHost(), modelHandler.isSpectator());
-
+        networkHandler = new NetworkHandler();
         SwingUtilities.invokeLater(() -> {
-            GameWindow window = new GameWindow(gameHandler.getGameModel());
-            window.setVisible(true);
+            LoginRegisterFrame registerFrame = new LoginRegisterFrame();
+            registerFrame.setVisible(true);
         });
-    }
-
-    private static boolean isHost() {
-        System.out.println("Wollen sie ein Spiel hosten?");
-        int input = scanner.nextInt();
-        scanner.nextLine();
-        return input == 1;
-    }
-
-    private static boolean isSpectator() {
-        System.out.println("Wollen sie ein Spiel beobachten?");
-        int input = scanner.nextInt();
-        scanner.nextLine();
-        return input == 1;
     }
 
     public static void initLvl(){
@@ -80,7 +43,7 @@ public class GameController {
         level.configure();
         gameHandler.setCurrentLevel(level);
 
-        gameHandler.addPlayerOnInit();
+        gameHandler.addPlayer();
 
 //        modelHandler.updateGameState(game);
 
@@ -156,5 +119,36 @@ public class GameController {
 
     public static String fetchUsername(){
         return dataHandler.getUsername();
+    }
+
+    public static DataHandler getDataHandler() {
+        return dataHandler;
+    }
+
+    public static void setDataHandler(DataHandler dataHandler) {
+        GameController.dataHandler = dataHandler;
+    }
+
+    public static void openGameWindow(){
+
+        new Levels();
+
+        Level level = Levels.getLevel(levelNo - 1);
+        level.configure();
+        gameHandler = new GameHandler(level);
+        gameHandler.setCurrentLevel(level);
+
+        gameHandler.addPlayer();
+        scanner = new Scanner(System.in);
+
+        modelHandler = new ModelHandler();
+        modelHandler.setGameModel(gameHandler.getGameModel());
+
+        networkHandler.startNetwork();
+
+        SwingUtilities.invokeLater(() -> {
+            GameWindow window = new GameWindow(gameHandler.getGameModel());
+            window.setVisible(true);
+        });
     }
 }
