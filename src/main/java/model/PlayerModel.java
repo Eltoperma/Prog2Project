@@ -20,7 +20,6 @@ public class PlayerModel implements Serializable {
         playerPosition = pos;
 
     }
-
     public Position getPlayerPosition() {
         return playerPosition;
     }
@@ -52,6 +51,15 @@ public class PlayerModel implements Serializable {
     public Image getPlayerIMG(){
         return new ImageIcon("src/assets/player/player_shadow.png").getImage();
     }
+
+
+    public Direction getPlaceholderDirection() {
+        return placeholderDirection;
+    }
+
+    public void setPlaceholderDirection(Direction placeholderDirection) {
+        this.placeholderDirection = placeholderDirection;
+    }
     public Image getUpgradeIMG(Upgrades up) {
         switch (up) {
             case ONE -> {
@@ -71,13 +79,5 @@ public class PlayerModel implements Serializable {
             }
             default -> throw new RuntimeException();
         }
-    }
-
-    public Direction getPlaceholderDirection() {
-        return placeholderDirection;
-    }
-
-    public void setPlaceholderDirection(Direction placeholderDirection) {
-        this.placeholderDirection = placeholderDirection;
     }
 }

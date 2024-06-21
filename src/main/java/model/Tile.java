@@ -1,4 +1,6 @@
-package DrawLogic;
+package model;
+
+import GameLogic.TileType;
 
 import javax.swing.*;
 import java.awt.*;

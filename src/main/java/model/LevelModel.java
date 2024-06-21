@@ -1,8 +1,7 @@
 package model;
 
-import DrawLogic.TileType;
+import GameLogic.TileType;
 import GameLogic.Position;
-import DrawLogic.Tile;
 import GameLogic.Upgrades;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,18 +33,6 @@ public class LevelModel implements Serializable {
         this.startingPosition = level.startingPosition;
         this.finishPositions = level.finishPositions;
         this.bestScore = level.bestScore;
-    }
-
-    public LevelModel(){
-
-    }
-    // Getter und Setter
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public int getID() {
