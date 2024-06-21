@@ -1,18 +1,21 @@
-package GameLogic;
+package model;
+
+import GameLogic.Position;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Position implements Serializable {
+public class PositionModel implements Serializable {
     public int x,y;
-    public Position(int x, int y){
+    public PositionModel(int x, int y){
         this.x = x;
         this.y = y;
     }
-    public Position(){
+    public PositionModel(){
         this.x = 0;
         this.y = 0;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

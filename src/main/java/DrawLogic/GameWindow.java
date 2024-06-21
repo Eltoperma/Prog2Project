@@ -3,19 +3,13 @@ package DrawLogic;
 
 import GameLogic.*;
 import jaco.mp3.player.MP3Player;
+import model.GameModel;
 
 
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.io.Console;
 import java.io.File;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.net.URL;
 
 
 public class GameWindow extends JFrame {
@@ -23,10 +17,10 @@ public class GameWindow extends JFrame {
 
     private MP3Player backgroundMusicPlayer;
     private DrawPanel gamePanel;
-    private Game game;
+    private GameModel gameModel;
 
-    public GameWindow(Game game) {
-        this.game = game;
+    public GameWindow(GameModel gameModel) {
+        this.gameModel = gameModel;
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
@@ -39,9 +33,10 @@ public class GameWindow extends JFrame {
         backgroundMusicPlayer.setRepeat(true);
 
         setBackground(new Color(51, 51, 51));
-        gamePanel = new DrawPanel(game);
+        gamePanel = new DrawPanel(gameModel);
         gamePanel.setPreferredSize(new Dimension(1000, 1000));
         add(gamePanel);
+        gamePanel.grabFocus();
         pack();
         playBackgroundMusic();
         toggleMusic();
@@ -56,7 +51,7 @@ public class GameWindow extends JFrame {
 
     private void controlWindow(int keyCode) {
         if(!gamePanel.isAnimationFinished) return;
-        Position from = game.getPlayer().getPlayerPosition();
+        Position from = gameModel.getPlayerModel().getPlayerPosition();
         Position to;
         switch (keyCode) {
             case KeyEvent.VK_M: {
@@ -67,40 +62,41 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
             case KeyEvent.VK_P:
-                GameHandler.nextGame();
+                GameController.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_O:
-                GameHandler.lastGame();
+                GameController.lastGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_R:
-                GameHandler.resetGame();
+                GameController.resetGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 break;
             case KeyEvent.VK_W:
-                game.getPlayer().move(Direction.UP);
-                to = game.getPlayer().getPlayerPosition();
+                GameController.move(Direction.UP);
+                to = gameModel.getPlayerModel().getPlayerPosition();
+                System.out.println("GameWindow Move: from = " + from.x + " " + from.y + " to " + to.x + " " + to.y);
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_D:
-                game.getPlayer().move(Direction.RIGHT);
-                to = game.getPlayer().getPlayerPosition();
+                GameController.move(Direction.RIGHT);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_S:
-                game.getPlayer().move(Direction.DOWN);
-                to = game.getPlayer().getPlayerPosition();
+                GameController.move(Direction.DOWN);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
             case KeyEvent.VK_A:
-                game.getPlayer().move(Direction.LEFT);
-                to = game.getPlayer().getPlayerPosition();
+                GameController.move(Direction.LEFT);
+                to = gameModel.getPlayerModel().getPlayerPosition();
                 gamePanel.movePlayer(from, to);
                 break;
         }
@@ -109,12 +105,12 @@ public class GameWindow extends JFrame {
             System.out.println("TimerStarted");
             if(gamePanel.isAnimationFinished){
                 System.out.println("Condition Met");
-                GameHandler.nextGame();
+                GameController.nextGame();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
             }
         });
-        if(game.isFinished){
+        if(gameModel.isFinished()){
             waiter.setRepeats(false);
             waiter.start();
         }

@@ -3,17 +3,17 @@ import java.util.TimerTask;
 
 class GameTimerTask extends TimerTask {
     private int seconds = 0;
-    private Game game;
+    private GameHandler gameHandler;
 
-    public GameTimerTask(Game game){
-        this.game = game;
+    public GameTimerTask(GameHandler gameHandler){
+        this.gameHandler = gameHandler;
     }
 
     @Override
     public void run() {
         seconds++;
         System.out.println("Sekunden vergangen: " + seconds);
-        game.updateTimer();
+        gameHandler.updateTimer();
         // Hier kannst du auch andere Spiel-logik einfügen, die jede Sekunde ausgeführt werden soll.
     }
 

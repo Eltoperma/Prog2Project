@@ -1,8 +1,9 @@
 package DrawLogic;
 
 import GameData.User;
+import GameLogic.GameController;
 import GameLogic.GameHandler;
-import NetworkLogic.UserDataService;
+import dataLogic.UserDataService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,11 +85,11 @@ public class LoginRegisterFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String selectedUser = (String) existingUsers.getSelectedItem();
                 if (selectedUser != null && !selectedUser.isEmpty()) {
-                    GameHandler.dataHandler.login(selectedUser);
-                    GameHandler.dataHandler.setHost(isHost.isSelected());
-                    GameHandler.dataHandler.setIp(ipInput.getText());
+                    GameController.getDataHandler().login(selectedUser);
+                    GameController.getNetworkHandler().setHost(isHost.isSelected());
+                    GameController.getNetworkHandler().setIp(ipInput.getText());
                     dispose();
-                    GameHandler.openGameWindow();
+                    GameController.openGameWindow();
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select a user to login.");
                 }

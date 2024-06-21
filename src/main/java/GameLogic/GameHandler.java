@@ -1,117 +1,108 @@
 package GameLogic;
 
-import DrawLogic.GameWindow;
-import DrawLogic.LoginRegisterFrame;
-import GameData.LevelData;
-import GameData.LevelUserData;
-import Level.*;
-import NetworkLogic.DataHandler;
-import NetworkLogic.LevelDataService;
-
-import javax.swing.*;
-
-
-import java.util.ArrayList;
-
+import Level.Level;
+import java.util.Timer;
+import model.GameModel;
+import model.LevelModel;
+import model.PlayerModel;
 
 public class GameHandler {
+    private GameModel gameModel;
+    private Timer timer;
+    private GameTimerTask task;
+    private PlayerHandler playerHandler;
 
-    static Levels levels;
-    static ArrayList<Level> levelList;
-    static Game game;
-    static int levelNo = 1;
-    public static DataHandler dataHandler;
-
-    public static void init(){
-        dataHandler = new DataHandler();
-        SwingUtilities.invokeLater(() -> {
-            LoginRegisterFrame registerFrame = new LoginRegisterFrame();
-            registerFrame.setVisible(true);
-        });
-
-
-
-    }
-    public static void openGameWindow(){
-        game = new Game();
-        new Levels();
-
-        Level level = Levels.getLevel(levelNo - 1);
-        level.configure();
-        game.setCurrentLevel(level);
-        game.addPlayer();
-
-        SwingUtilities.invokeLater(() -> {
-            System.out.println("tried opening game Window");
-            GameWindow window = new GameWindow(game);
-            window.setVisible(true);
-        });
+    public GameHandler(Level currentLevel) {
+        this.gameModel = new GameModel(currentLevel);
+        playerHandler = new PlayerHandler(this);
+        gameModel.setUsername(GameController.fetchUsername());
+        initLevelParams();
     }
 
-
-
-    public static void initLvl(){
-        //System.out.println("init");
-//        game = new Game();
-
-//        game = new Game();
-
-//        new Levels();
-
-        Level level = Levels.getLevel(levelNo - 1);
-        level.configure();
-        game.setCurrentLevel(level);
-
-        game.addPlayer();
-
+    public GameModel getGameModel() {
+        return gameModel;
     }
 
-    public static Levels getLevels() {
-        return levels;
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
     }
 
-    public static ArrayList<Level> getLevelList() {
-        return levelList;
+    public void setCurrentLevel(Level level) {
+        gameModel.setLevelModel(new LevelModel(level));
+        clearValues();
+        gameModel.getLevelModel().setBestScore(GameController.fetchLevelUserData(level.getID()).getHighScore());
+        initLevelParams();
     }
 
-    public static Game getGame() {
-        return game;
+    public LevelModel getCurrentLevel(){
+        return gameModel.getLevelModel();
     }
 
-    public static void nextGame(){
-        if(levelNo < Levels.levelList.size()) {
-            levelNo++;
-            //ladebildschirm
-            GameHandler.initLvl();
+    public void addPlayer() {
 
+        gameModel.setPlayerModel(new PlayerModel(gameModel.getLevelModel().getStartingPosition()));
+        playerHandler.setPlayerModel(gameModel.getPlayerModel());
+//        gameModel.getPlayerModel().setPlayerPosition(gameModel.getLevelModel().getStartingPosition());
+        System.out.println("addPlayer: " + gameModel.getLevelModel().getStartingPosition() + " class: " + gameModel.getLevelModel().getClass());
+    }
+
+    public void updateMoves() {
+        gameModel.setMovesCount(gameModel.getMovesCount() + 1);
+        gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.98));
+        System.out.println("Move: " + gameModel.getMovesCount());
+    }
+
+    public void updateTimer() {
+        gameModel.setTimeCount(gameModel.getTimeCount() + 1);
+        gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.992));
+        System.out.println("Score: " + gameModel.getCurrentScore());
+    }
+
+    public void finish() {
+        gameModel.setFinished(true);
+        timer.cancel();
+        System.out.println("Moves: " + gameModel.getMovesCount() + " Zeit: " + gameModel.getTimeCount());
+        testForBestScore();
+    }
+
+    private void testForBestScore() {
+        if (gameModel.isFinished()) {
+            if (gameModel.getCurrentScore() > gameModel.getLevelModel().getBestScore()) {
+                System.out.println("Neuer Highscore!");
+                gameModel.getLevelModel().setBestScore(gameModel.getCurrentScore());
+                GameController.savePersonalHighScore(gameModel.getLevelModel(), gameModel.getCurrentScore());
+            }
+            if (gameModel.getCurrentScore() > GameController.fetchLevelData(gameModel.getLevelModel().getID()).getHighscore()) {
+                GameController.saveHighscore(gameModel.getLevelModel().getID(), gameModel.getCurrentScore());
+            }
         }
     }
 
-    public static void lastGame(){
-        if(levelNo > 0){
-            levelNo--;
-            GameHandler.initLvl();
+    private void clearValues() {
+        if (timer != null) {
+            timer.cancel();
         }
     }
 
-    public static void resetGame(){
-        GameHandler.initLvl();
+    public void initLevelParams() {
+        gameModel.setFinished(false);
+        gameModel.setMovesCount(0);
+        gameModel.setTimeCount(0);
+        gameModel.setCurrentScore(gameModel.getBASE_SCORE());
+        countTime();
     }
 
-
-    public static void savePersonalHighScore(Level level, int score) {
-        dataHandler.saveLevelUserData(level, score);
-    }
-    public static LevelData fetchLevelData(int levelId){
-        return dataHandler.fetchLevelData(levelId);
+    public void countTime() {
+        timer = new Timer();
+        task = new GameTimerTask(this);
+        timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
-    public static void saveHighscore(int levelId, int highscore){
-        dataHandler.saveLevelData(levelId, highscore);
+    public PlayerHandler getPlayerHandler() {
+        return playerHandler;
     }
 
-    public static LevelUserData fetchLevelUserData(int levelId) {
-        return dataHandler.fetchLevelUserData(levelId);
-
+    public void setPlayer(PlayerHandler playerHandler) {
+        this.playerHandler = playerHandler;
     }
 }

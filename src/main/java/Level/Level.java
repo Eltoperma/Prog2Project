@@ -111,4 +111,7 @@ public abstract class Level {
         finishPositions.add(pos);
     }
 
+    public int getID() {
+        return ID;
+    }
 }

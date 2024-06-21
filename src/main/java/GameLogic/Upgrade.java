@@ -1,6 +1,8 @@
 package GameLogic;
 
-public class Upgrade {
+import java.io.Serializable;
+
+public class Upgrade implements Serializable {
     public Upgrades upUpgrade;
     public Upgrades downUpgrade;
     public Upgrades leftUpgrade;

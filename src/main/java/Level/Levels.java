@@ -1,11 +1,6 @@
 package Level;
 
-import DrawLogic.Tile;
-import GameLogic.Position;
-import GameLogic.Upgrades;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Levels {
     public static ArrayList<Level> levelList;

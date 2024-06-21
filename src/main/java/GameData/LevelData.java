@@ -2,8 +2,6 @@ package GameData;
 
 import Level.Level;
 
-import java.util.Objects;
-
 public class LevelData {
 
     private int levelId;

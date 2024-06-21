@@ -2,8 +2,9 @@ package DrawLogic;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable {
     public TileType tile;
     private boolean isGoal = false;
     public Tile(TileType tile){
