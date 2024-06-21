@@ -34,7 +34,7 @@ public class LoginRegisterFrame extends JFrame {
         JButton register = new JButton("Registrieren");
         JButton login = new JButton("Login");
 
-        JCheckBox isHost = new JCheckBox("Host");
+        JCheckBox isClient= new JCheckBox("Spectate?");
 
         // Create main panel with BoxLayout (vertical)
         JPanel mainPanel = new JPanel();
@@ -56,7 +56,7 @@ public class LoginRegisterFrame extends JFrame {
         mainPanel.add(new JLabel("IP"));
         mainPanel.add(ipInput);
         mainPanel.add(Box.createVerticalStrut(spacing));
-        mainPanel.add(isHost);
+        mainPanel.add(isClient);
         mainPanel.add(Box.createVerticalStrut(spacing));
         mainPanel.add(buttonPanel);
 
@@ -86,7 +86,7 @@ public class LoginRegisterFrame extends JFrame {
                 String selectedUser = (String) existingUsers.getSelectedItem();
                 if (selectedUser != null && !selectedUser.isEmpty()) {
                     GameController.getDataHandler().login(selectedUser);
-                    GameController.getNetworkHandler().setHost(isHost.isSelected());
+                    GameController.getNetworkHandler().setHost(!isClient.isSelected());
                     GameController.getNetworkHandler().setIp(ipInput.getText());
                     dispose();
                     GameController.openGameWindow();

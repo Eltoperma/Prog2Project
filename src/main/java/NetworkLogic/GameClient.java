@@ -31,7 +31,7 @@ public class GameClient {
     public void sendGameModel(GameModel game) {
         try {
             out.writeObject(game);
-            out.flush(); // Sicherstellen, dass Daten sofort gesendet werden
+            //out.flush(); // Sicherstellen, dass Daten sofort gesendet werden
             System.out.println("Spielmodell erfolgreich an Server gesendet.");
         } catch (IOException e) {
             System.err.println("Fehler beim Senden des Spielmodells: " + e.getMessage());
@@ -81,8 +81,6 @@ public class GameClient {
             while (true) {
                 receivedGameModel = receiveGameModel();
                 if (receivedGameModel != null) {
-
-
                     System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
                     System.out.println("Score: " + receivedGameModel.getCurrentScore());
                     System.out.println("Spieler: " + receivedGameModel.getUsername());
@@ -104,9 +102,7 @@ public class GameClient {
             GameModel receivedGameModel;
             receivedGameModel = gameClient.receiveGameModel();
 
-            GameModel finalReceivedGameModel = receivedGameModel;
-
-            SpectatorHandler spectatorHandler = new SpectatorHandler(finalReceivedGameModel);
+            SpectatorHandler spectatorHandler = new SpectatorHandler(receivedGameModel);
 
             while (true) {
                 receivedGameModel = gameClient.receiveGameModel();

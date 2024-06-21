@@ -11,11 +11,9 @@ public class SpectatorHandler {
 
     public SpectatorHandler(GameModel gameModel){
         this.gameModel = gameModel;
+        window = new SpectatorWindow(gameModel);
+        window.setVisible(true);
 
-        SwingUtilities.invokeLater(() -> {
-            window = new SpectatorWindow(gameModel);
-            window.setVisible(true);
-        });
     }
 
 

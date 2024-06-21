@@ -13,15 +13,13 @@ public class SpectatorWindow extends JFrame{
 
     private MP3Player backgroundMusicPlayer;
     private DrawPanel gamePanel;
-    private GameModel gameModel;
+
     public SpectatorWindow(GameModel gameModel) {
 
-        this.gameModel = gameModel;
         ImageIcon icon = new ImageIcon("src/assets/icons/Logo.png", "Logo");
         setIconImage(icon.getImage());
         setTitle("UDLR Modify");
         this.getContentPane().setBackground(Color.DARK_GRAY);
-
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -57,7 +55,8 @@ public class SpectatorWindow extends JFrame{
     }
 
     public void updateGameModel(GameModel receivedGameModel) {
-        gamePanel.setGameModel(gameModel);
+        gamePanel.setGameModel(receivedGameModel);
         gamePanel.recalculateDimensions();
+        gamePanel.refetchPlayer();
     }
 }
