@@ -1,10 +1,10 @@
 package DrawLogic;
 
-import GameLogic.GameController;
 import GameLogic.Position;
 import GameLogic.Upgrades;
 import model.GameModel;
 import model.PlayerModel;
+import model.Tile;
 
 
 import javax.swing.*;
@@ -186,7 +186,7 @@ public class DrawPanel extends JPanel {
         });
         playerAnimationTimer.start();
     }
-    //Implementation als Timer hat zu performance problemen geführt
+    //Implementation als Timer hat zu performance-Problemen geführt
     private void drawEngine(boolean start) {
 
         Thread drawThread = new Thread(new Runnable() {

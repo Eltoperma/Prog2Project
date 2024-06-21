@@ -13,15 +13,4 @@ public class LevelUserData {
         return highScore;
     }
 
-    public void setHighScore(int highScore) {
-        this.highScore = highScore;
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
 }

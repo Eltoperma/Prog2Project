@@ -23,10 +23,6 @@ public class GameHandler {
         return gameModel;
     }
 
-    public void setGameModel(GameModel gameModel) {
-        this.gameModel = gameModel;
-    }
-
     public void setCurrentLevel(Level level) {
         gameModel.setLevelModel(new LevelModel(level));
         clearValues();
@@ -42,7 +38,6 @@ public class GameHandler {
 
         gameModel.setPlayerModel(new PlayerModel(gameModel.getLevelModel().getStartingPosition()));
         playerHandler.setPlayerModel(gameModel.getPlayerModel());
-//        gameModel.getPlayerModel().setPlayerPosition(gameModel.getLevelModel().getStartingPosition());
         System.out.println("addPlayer: " + gameModel.getLevelModel().getStartingPosition() + " class: " + gameModel.getLevelModel().getClass());
     }
 
@@ -100,9 +95,5 @@ public class GameHandler {
 
     public PlayerHandler getPlayerHandler() {
         return playerHandler;
-    }
-
-    public void setPlayer(PlayerHandler playerHandler) {
-        this.playerHandler = playerHandler;
     }
 }

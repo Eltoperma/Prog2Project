@@ -18,8 +18,6 @@ import java.util.Scanner;
 
 public class GameController {
 
-    static Levels levels;
-    static ArrayList<Level> levelList;
     static GameHandler gameHandler;
     static int levelNo = 1;
     private static DataHandler dataHandler;
@@ -39,48 +37,32 @@ public class GameController {
 
         Level level = Levels.getLevel(levelNo - 1);
         level.configure();
+
         gameHandler.setCurrentLevel(level);
-
         gameHandler.addPlayer();
-
-//        modelHandler.updateGameState(game);
-
-    }
-
-    public static Levels getLevels() {
-        return levels;
-    }
-
-    public static ArrayList<Level> getLevelList() {
-        return levelList;
     }
 
     public static GameHandler getGameHandler() {
         return gameHandler;
     }
 
-    public static void nextGame() {
+    public static void nextLevel() {
         if (levelNo < Levels.levelList.size()) {
             levelNo++;
-            //ladebildschirm
             GameController.initLvl();
-//            updateGameModel(game);
         }
     }
 
-    public static void lastGame() {
+    public static void recentLevel() {
         if (levelNo > 0) {
             levelNo--;
             GameController.initLvl();
-//            updateGameModel(game);
         }
     }
 
-    public static void resetGame() {
+    public static void resetLevel() {
         GameController.initLvl();
-//        updateGameModel(game);
     }
-
 
     public static void savePersonalHighScore(LevelModel level, int score) {
         dataHandler.saveLevelUserData(level, score);
@@ -103,12 +85,6 @@ public class GameController {
         return networkHandler;
     }
 
-
-//    public static void updateGameModel(Game game){
-//        GameModel gameModel = modelHandler.updateGameState(game);
-//        networkHandler.updateGameState(gameModel);
-//    }
-
     public static void move(Direction dir) {
         gameHandler.getPlayerHandler().move(dir);
     }
@@ -119,10 +95,6 @@ public class GameController {
 
     public static DataHandler getDataHandler() {
         return dataHandler;
-    }
-
-    public static void setDataHandler(DataHandler dataHandler) {
-        GameController.dataHandler = dataHandler;
     }
 
     public static void openGameWindow() {
@@ -139,15 +111,13 @@ public class GameController {
             gameHandler.addPlayer();
             scanner = new Scanner(System.in);
 
-
             networkHandler.startNetwork();
 
             SwingUtilities.invokeLater(() -> {
                 GameWindow window = new GameWindow(gameHandler.getGameModel());
                 window.setVisible(true);
             });
-        }
-        else {
+        } else {
             networkHandler.startNetwork();
         }
     }

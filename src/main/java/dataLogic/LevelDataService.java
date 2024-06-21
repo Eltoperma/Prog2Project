@@ -38,7 +38,6 @@ public class LevelDataService {
             }
         }
 
-        // Speichere die aktualisierte Level-Datenliste
         saveAllLevelData(existingLevelData);
     }
 
@@ -127,22 +126,4 @@ public class LevelDataService {
         }
         throw new RuntimeException("Level konnte nicht gefunden werden!");
     }
-
-
-    // Beispiel zur Veranschaulichung
-    public static void main(String[] args) {
-        // Beispiel zum Speichern und Laden von LevelData
-        List<LevelData> levelDataList = new ArrayList<>();
-        saveAllLevelData(levelDataList);
-
-        // Beispiel zum Aktualisieren eines Highscores
-
-        // LevelData laden und anzeigen
-        List<LevelData> loadedLevelDataList = loadAllLevelData();
-        for (LevelData levelData : loadedLevelDataList) {
-            System.out.println("Level ID: " + levelData.getLevelId() + ", Highscore: " + levelData.getHighscore() + ", Best User: " + levelData.getBestUserName());
-        }
-    }
-
-
 }

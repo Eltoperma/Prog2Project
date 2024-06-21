@@ -1,7 +1,7 @@
 package Level;
 
-import DrawLogic.Tile;
-import DrawLogic.TileType;
+import model.Tile;
+import GameLogic.TileType;
 import GameLogic.Position;
 import GameLogic.Upgrades;
 
@@ -62,7 +62,7 @@ public abstract class Level {
             }
         }
         else{
-            throw new RuntimeException("Du dummer HS, das war falsch herum >:(");
+            throw new RuntimeException("Die Linie wurde falsch herum gezeichnet!");
         }
     }
 
@@ -90,14 +90,6 @@ public abstract class Level {
                 tiles.computeIfAbsent(new Position(x, y), k -> new Tile(TileType.STANDARD));
             }
         }
-    }
-
-    public boolean isPlayable(Position pos){
-        Position newPos = new Position(pos.x, pos.y);
-        if(tiles.containsKey(newPos)){
-            return tiles.get(newPos).getTileType().equals(TileType.DARK) || tiles.get(newPos).getTileType().equals(TileType.LIGHT) || tiles.get(pos).isGoal();
-        }
-        throw new RuntimeException("Diese Position existiert nicht!?");
     }
 
     public void test(){

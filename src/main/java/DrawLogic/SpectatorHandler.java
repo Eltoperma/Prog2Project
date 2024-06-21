@@ -17,7 +17,6 @@ public class SpectatorHandler {
 
     }
 
-
     public void updateGameModel(GameModel receivedGameModel) {
         window.updateGameModel(receivedGameModel);
     }

@@ -16,8 +16,6 @@ public class GameModel implements Serializable {
     private boolean isFinished;
     private final int BASE_SCORE = 10000;
     private int version = 0;
-
-
     private String username;
 
     public GameModel(Level currentLevel) {
@@ -77,22 +75,6 @@ public class GameModel implements Serializable {
         isFinished = finished;
     }
 
-
-
-    public void movePlayer(Direction direction) {
-        // Spiel-Logik zum Bewegen des Spielers
-        System.out.println("Player moved " + direction);
-    }
-
-    public boolean allUpgradesCollected() {
-        for (Map.Entry<Position, Upgrades> entry : levelModel.getUpgrades().entrySet()) {
-            if (entry.getValue() != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public int getBASE_SCORE() {
         return BASE_SCORE;
     }
@@ -104,11 +86,13 @@ public class GameModel implements Serializable {
         this.username = username;
     }
 
-    public int getVersion() {
-        return version;
+    public boolean allUpgradesCollected() {
+        for (Map.Entry<Position, Upgrades> entry : levelModel.getUpgrades().entrySet()) {
+            if (entry.getValue() != null) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
 }

@@ -145,22 +145,5 @@ public class UserDataService {
         }
         throw new RuntimeException("Spieler konnte nicht gefunden werden!");
     }
-
-    public static void main(String[] args) {
-        // Beispiel zum Speichern und Laden von Benutzern
-        List<User> users = new ArrayList<>();
-//        users.add(new User("user1", "password1"));
-//        users.add(new User("user2", "password2"));
-        saveUsers(users);
-
-        // Beispiel zur Authentifizierung
-//        User authenticatedUser = authenticate("user1", "password1");
-//        if (authenticatedUser != null) {
-//            System.out.println("Benutzer authentifiziert: " + authenticatedUser.getUsername());
-//        } else {
-//            System.out.println("Authentifizierung fehlgeschlagen.");
-//        }
-    }
-
 }
 

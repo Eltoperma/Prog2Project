@@ -14,14 +14,9 @@ public class GameServer {
     private ServerSocket serverSocket;
     private List<ObjectOutputStream> clientOutputs;
     Socket clientSocket;
-    private int PORT;
 
     public GameServer(int PORT) throws IOException {
-        this.PORT = PORT;
-        serverSocket = new ServerSocket(41337); // Example port
-        clientOutputs = new ArrayList<>(); //Wo für?
-
-
+        serverSocket = new ServerSocket(PORT);
         new Thread(this::acceptClients).start();
         System.out.println("GameServer started on port " + getPort());
     }
@@ -36,7 +31,6 @@ public class GameServer {
                 clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-                //ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
                 clientOutputs.add(out);
 
                 handleClient(out);
@@ -64,8 +58,6 @@ public class GameServer {
                 // Print debug information
                 System.out.println("Server received game model: " + gameModel);
 
-                // Update all clients with the new game model
-                //updateAllClients();
 
                 Thread.sleep(12);
             }
@@ -76,18 +68,4 @@ public class GameServer {
         }
     }
 
-    private void updateAllClients() {
-        for (ObjectOutputStream out : clientOutputs) {
-            try {
-                out.writeObject(gameModel);
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setGameModel(GameModel gm) {
-        this.gameModel = gm;
-    }
 }

@@ -68,12 +68,6 @@ public class GameClient {
                 receivedGameModel = receiveGameModel();
                 if (receivedGameModel != null) {
                     spectatorHandler.updateGameModel(receivedGameModel);
-
-                    System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
-                    System.out.println("Score: " + receivedGameModel.getCurrentScore());
-                    System.out.println("Spieler: " + receivedGameModel.getUsername());
-                    System.out.println("PosX: " + receivedGameModel.getPlayerModel().getPlayerPosition().x);
-                    System.out.println("Komplex: " + receivedGameModel.getLevelModel().getTiles().get(new Position(4, 5)).getTileType());
                 } else {
                     break;
                 }
@@ -85,29 +79,6 @@ public class GameClient {
 
     public static void main(String[] args) {
         GameClient gameClient = new GameClient("localhost", 41337); // Beispiel-Host und Port
-
-        try {
-            GameModel receivedGameModel;
-            receivedGameModel = gameClient.receiveGameModel();
-
-            SpectatorHandler spectatorHandler = new SpectatorHandler(receivedGameModel);
-
-            while (true) {
-                receivedGameModel = gameClient.receiveGameModel();
-                if (receivedGameModel != null) {
-                    spectatorHandler.updateGameModel(receivedGameModel);
-
-                    System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
-                    System.out.println("Score: " + receivedGameModel.getCurrentScore());
-                    System.out.println("Spieler: " + receivedGameModel.getUsername());
-                    System.out.println("PosX: " + receivedGameModel.getPlayerModel().getPlayerPosition().x);
-                    System.out.println("Komplex: " + receivedGameModel.getLevelModel().getTiles().get(new Position(4, 5)).getTileType());
-                } else {
-                    break;
-                }
-            }
-        } finally {
-            gameClient.close();
-        }
+        gameClient.handleClient();
     }
 }
