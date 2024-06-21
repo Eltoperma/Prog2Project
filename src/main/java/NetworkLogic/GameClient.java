@@ -1,8 +1,13 @@
 package NetworkLogic;
 
+import DrawLogic.DrawPanel;
+import DrawLogic.SpectatorHandler;
+import DrawLogic.SpectatorWindow;
+import GameLogic.GameController;
 import GameLogic.Position;
 import model.GameModel;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 
@@ -62,14 +67,51 @@ public class GameClient {
         }
     }
 
+    public void handleClient(){
+        try {
+            GameModel receivedGameModel;
+            receivedGameModel = receiveGameModel();
+
+            GameModel finalReceivedGameModel = receivedGameModel;
+            SwingUtilities.invokeLater(() -> {
+                SpectatorWindow window = new SpectatorWindow(finalReceivedGameModel);
+                window.setVisible(true);
+            });
+
+            while (true) {
+                receivedGameModel = receiveGameModel();
+                if (receivedGameModel != null) {
+
+
+                    System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
+                    System.out.println("Score: " + receivedGameModel.getCurrentScore());
+                    System.out.println("Spieler: " + receivedGameModel.getUsername());
+                    System.out.println("PosX: " + receivedGameModel.getPlayerModel().getPlayerPosition().x);
+                    System.out.println("Komplex: " + receivedGameModel.getLevelModel().getTiles().get(new Position(4, 5)).getTileType());
+                } else {
+                    break;
+                }
+            }
+        } finally {
+            close();
+        }
+    }
+
     public static void main(String[] args) {
         GameClient gameClient = new GameClient("localhost", 41337); // Beispiel-Host und Port
 
         try {
             GameModel receivedGameModel;
+            receivedGameModel = gameClient.receiveGameModel();
+
+            GameModel finalReceivedGameModel = receivedGameModel;
+
+            SpectatorHandler spectatorHandler = new SpectatorHandler(finalReceivedGameModel);
+
             while (true) {
                 receivedGameModel = gameClient.receiveGameModel();
                 if (receivedGameModel != null) {
+                    spectatorHandler.updateGameModel(receivedGameModel);
 
                     System.out.println("Empfangenes Spielmodell: " + receivedGameModel);
                     System.out.println("Score: " + receivedGameModel.getCurrentScore());

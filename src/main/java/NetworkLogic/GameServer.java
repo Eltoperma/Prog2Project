@@ -14,6 +14,7 @@ public class GameServer {
     private GameModel gameModel;
     private ServerSocket serverSocket;
     private List<ObjectOutputStream> clientOutputs;
+    Socket clientSocket;
     private ModelHandler modelHandler;
     private int PORT;
 
@@ -21,6 +22,8 @@ public class GameServer {
         this.PORT = PORT;
         serverSocket = new ServerSocket(41337); // Example port
         clientOutputs = new ArrayList<>();
+
+        clientSocket = serverSocket.accept();
         new Thread(this::acceptClients).start();
         System.out.println("GameServer started on port " + getPort());
     }
@@ -32,7 +35,6 @@ public class GameServer {
     private void acceptClients() {
         try {
             while (true) {
-                Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
 //                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
@@ -53,15 +55,12 @@ public class GameServer {
         try {
             while (true) {
                 // Send the current game state to the client
+
                 gameModel = GameController.getGameHandler().getGameModel();
-//                gameModel.setVersion(gameModel.getVersion() + 1);
                 System.out.println("Network GameModel: " + gameModel.getCurrentScore());
 
                 out.writeObject(gameModel);
                 out.flush(); // Ensure data is sent immediately
-
-//                GameModel clientGameModel = (GameModel) in.readObject();
-
 
                 // Print debug information
                 System.out.println("Server received game model: " + gameModel);

@@ -151,4 +151,12 @@ public class GameController {
             window.setVisible(true);
         });
     }
+
+    public static int getLevelNo() {
+        return levelNo;
+    }
+
+    public static void setLevelNo(int levelNo) {
+        GameController.levelNo = levelNo;
+    }
 }

@@ -35,6 +35,7 @@ public class NetworkHandler {
         else{
             try {
                 gameClient = new GameClient(ip, PORT);
+                gameClient.handleClient();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
