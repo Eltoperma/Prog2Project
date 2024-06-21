@@ -1,6 +1,6 @@
 package Level;
 
-import model.Tile;
+import GameLogic.Tile;
 import GameLogic.TileType;
 import GameLogic.Position;
 import GameLogic.Upgrades;

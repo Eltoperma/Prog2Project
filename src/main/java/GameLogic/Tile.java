@@ -1,4 +1,4 @@
-package model;
+package GameLogic;
 
 import GameLogic.TileType;
 

@@ -4,7 +4,7 @@ import GameLogic.Position;
 import GameLogic.Upgrades;
 import model.GameModel;
 import model.PlayerModel;
-import model.Tile;
+import GameLogic.Tile;
 
 
 import javax.swing.*;
