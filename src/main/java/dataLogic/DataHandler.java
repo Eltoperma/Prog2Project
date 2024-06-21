@@ -7,7 +7,6 @@ import Level.Level;
 import model.LevelModel;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class DataHandler {
     private User user;
