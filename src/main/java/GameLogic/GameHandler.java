@@ -44,19 +44,16 @@ public class GameHandler {
     public void updateMoves() {
         gameModel.setMovesCount(gameModel.getMovesCount() + 1);
         gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.98));
-        System.out.println("Move: " + gameModel.getMovesCount());
     }
 
     public void updateTimer() {
         gameModel.setTimeCount(gameModel.getTimeCount() + 1);
         gameModel.setCurrentScore((int) (gameModel.getCurrentScore() * 0.992));
-        System.out.println("Score: " + gameModel.getCurrentScore());
     }
 
     public void finish() {
         gameModel.setFinished(true);
         timer.cancel();
-        System.out.println("Moves: " + gameModel.getMovesCount() + " Zeit: " + gameModel.getTimeCount());
         testForBestScore();
     }
 

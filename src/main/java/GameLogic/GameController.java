@@ -22,7 +22,6 @@ public class GameController {
     static int levelNo = 1;
     private static DataHandler dataHandler;
     private static NetworkHandler networkHandler;
-    private static Scanner scanner;
 
     public static void init() {
         dataHandler = new DataHandler();
@@ -109,7 +108,6 @@ public class GameController {
             gameHandler.setCurrentLevel(level);
 
             gameHandler.addPlayer();
-            scanner = new Scanner(System.in);
 
             networkHandler.startNetwork();
 

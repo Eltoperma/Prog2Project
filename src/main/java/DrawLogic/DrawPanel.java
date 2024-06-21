@@ -186,7 +186,7 @@ public class DrawPanel extends JPanel {
         });
         playerAnimationTimer.start();
     }
-    //Implementation als Timer hat zu performance-Problemen geführt
+    //Implementation als Timer hat zu Performance-Problemen geführt
     private void drawEngine(boolean start) {
 
         Thread drawThread = new Thread(new Runnable() {

@@ -73,7 +73,6 @@ public class PlayerHandler {
     private void adjustPosition(int xDiff, int yDiff, Direction direction) {
         Position landOnPosition = calculateLandOnPosition(xDiff, yDiff);
         Levels.getLevel(0).test();
-        System.out.println("landOnPosition: x = " + landOnPosition.x + " y = " + landOnPosition.y);
 
         if (isPlayable(landOnPosition)) {
             if (handleEmptyTile(landOnPosition)) return;
