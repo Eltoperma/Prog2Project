@@ -3,32 +3,10 @@ package dataLogic;
 import GameData.LevelData;
 import GameData.LevelUserData;
 import GameData.User;
-import Level.Level;
 import model.LevelModel;
-
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class DataHandler {
     private User user;
-    private String ip;
-    private boolean isHost;
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public boolean isHost() {
-        return isHost;
-    }
-
-    public void setHost(boolean host) {
-        isHost = host;
-    }
 
     public void setUser(User user){
         this.user = user;

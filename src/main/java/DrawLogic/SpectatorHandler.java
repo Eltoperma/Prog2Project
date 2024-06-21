@@ -10,6 +10,7 @@ public class SpectatorHandler {
     SpectatorWindow window;
 
     public SpectatorHandler(GameModel gameModel){
+        System.out.println("SpectatorHandler Constructor: " + gameModel.getCurrentScore());
         this.gameModel = gameModel;
         window = new SpectatorWindow(gameModel);
         window.setVisible(true);

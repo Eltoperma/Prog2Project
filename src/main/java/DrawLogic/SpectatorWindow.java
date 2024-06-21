@@ -55,6 +55,7 @@ public class SpectatorWindow extends JFrame{
     }
 
     public void updateGameModel(GameModel receivedGameModel) {
+        System.out.println("UpdateGameModel: " + receivedGameModel.getCurrentScore());
         gamePanel.setGameModel(receivedGameModel);
         gamePanel.recalculateDimensions();
         gamePanel.refetchPlayer();

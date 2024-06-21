@@ -2,7 +2,6 @@ package NetworkLogic;
 
 import GameLogic.GameController;
 import model.GameModel;
-import model.ModelHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -15,7 +14,6 @@ public class GameServer {
     private ServerSocket serverSocket;
     private List<ObjectOutputStream> clientOutputs;
     Socket clientSocket;
-    private ModelHandler modelHandler;
     private int PORT;
 
     public GameServer(int PORT) throws IOException {
