@@ -1,6 +1,5 @@
 package GameLogic;
 
-import DrawLogic.TileType;
 import Level.Levels;
 import model.PlayerModel;
 
@@ -13,16 +12,6 @@ public class PlayerHandler {
         this.gameHandler = gameHandler;
     }
 
-    public PlayerHandler(Position position, Upgrade upgrades, GameHandler gameHandler) {
-        this.playerModel = new PlayerModel(position);
-        this.playerModel.setPlayerUpgrades(upgrades);
-        this.gameHandler = gameHandler;
-    }
-
-    public Upgrade getPlayerUpgrades() {
-        return playerModel.getPlayerUpgrades();
-    }
-
     public boolean hasPlayerUpgradeOnDirection(Direction direction) {
         return switch (direction) {
             case UP -> playerModel.getPlayerUpgrades().upUpgrade != Upgrades.NONE;
@@ -31,25 +20,8 @@ public class PlayerHandler {
             case LEFT -> playerModel.getPlayerUpgrades().leftUpgrade != Upgrades.NONE;
         };
     }
-
-    public boolean isHasPlaceholder() {
-        return playerModel.isHasPlaceholder();
-    }
-
     public boolean hasAllUpgrades() {
         return playerModel.hasAllUpgrades();
-    }
-
-    public void setPlayerUpgradeOnDirection(Direction direction, Upgrades upgrade) {
-        if (!hasPlayerUpgradeOnDirection(direction)) {
-            switch (direction) {
-                case UP -> playerModel.getPlayerUpgrades().upUpgrade = upgrade;
-                case DOWN -> playerModel.getPlayerUpgrades().downUpgrade = upgrade;
-                case RIGHT -> playerModel.getPlayerUpgrades().rightUpgrade = upgrade;
-                case LEFT -> playerModel.getPlayerUpgrades().leftUpgrade = upgrade;
-                default -> throw new RuntimeException("Fehler bei Upgrade!");
-            }
-        }
     }
 
     public void move(Direction direction) {
@@ -99,55 +71,90 @@ public class PlayerHandler {
     }
 
     private void adjustPosition(int xDiff, int yDiff, Direction direction) {
-        Position landOnPosition = new Position(playerModel.getPlayerPosition().x + xDiff, playerModel.getPlayerPosition().y + yDiff);
-
-//        GameHandler.updateGameModel(game);
-
+        Position landOnPosition = calculateLandOnPosition(xDiff, yDiff);
         Levels.getLevel(0).test();
         System.out.println("landOnPosition: x = " + landOnPosition.x + " y = " + landOnPosition.y);
 
-        if (gameHandler.getCurrentLevel().isPlayable(landOnPosition)) {
-            if (gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition) == null && !gameHandler.getCurrentLevel().getTiles().get(landOnPosition).isGoal()) {
-                playerModel.setPlayerPosition(landOnPosition);
-                gameHandler.updateMoves();
-                return;
-            }
-
-            if (gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition) != null && (!hasPlayerUpgradeOnDirection(direction) || playerModel.isHasPlaceholder()) && !gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition).equals(Upgrades.NONE)) {
-                collectUpgrade(direction, landOnPosition);
-                playerModel.setPlayerPosition(landOnPosition);
-                gameHandler.updateMoves();
-                return;
-            }
-
-            Position upgradePushPosition = calcPositionByPosAndDir(landOnPosition, direction);
-
-            if (gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition) != null && (hasPlayerUpgradeOnDirection(direction) || (!hasPlayerUpgradeOnDirection(direction) && getUpgradeByDirection(direction).equals(Upgrades.NONE))) && !gameHandler.getCurrentLevel().getTiles().get(upgradePushPosition).getTileType().equals(TileType.WALL) && !playerModel.isHasPlaceholder() && gameHandler.getCurrentLevel().getUpgrades().get(upgradePushPosition) == null) {
-                Upgrades removedUpgrade = gameHandler.getCurrentLevel().getUpgrades().remove(landOnPosition);
-                gameHandler.getCurrentLevel().getUpgrades().put(upgradePushPosition, removedUpgrade);
-                playerModel.setPlayerPosition(landOnPosition);
-                gameHandler.updateMoves();
-                return;
-            }
-
-            if (gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition) != null && gameHandler.getCurrentLevel().getUpgrades().get(landOnPosition).equals(Upgrades.NONE) && (hasPlayerUpgradeOnDirection(direction) || playerModel.isHasPlaceholder())) {
-                collectUpgrade(direction, landOnPosition);
-                playerModel.setPlayerPosition(landOnPosition);
-                gameHandler.updateMoves();
-                return;
-            }
-
-            if (gameHandler.getCurrentLevel().getTiles().get(landOnPosition).isGoal()) {
-                gameHandler.updateMoves();
-                if (canFinish()) {
-                    playerModel.setPlayerPosition(landOnPosition);
-                    gameHandler.finish();
-                    return;
-                }
-                playerModel.setPlayerPosition(landOnPosition);
-                return;
-            }
+        if (isPlayable(landOnPosition)) {
+            if (handleEmptyTile(landOnPosition)) return;
+            if (handleUpgradeCollection(landOnPosition, direction)) return;
+            if (handleUpgradePush(landOnPosition, direction)) return;
+            if (handleNoneUpgradeCollection(landOnPosition, direction)) return;
+            if (handleGoalTile(landOnPosition)) return;
         }
+    }
+
+    private Position calculateLandOnPosition(int xDiff, int yDiff) {
+        return new Position(playerModel.getPlayerPosition().x + xDiff, playerModel.getPlayerPosition().y + yDiff);
+    }
+
+    private boolean isPlayable(Position position) {
+        return gameHandler.getCurrentLevel().isPlayable(position);
+    }
+
+    private boolean handleEmptyTile(Position position) {
+        if (gameHandler.getCurrentLevel().getUpgrades().get(position) == null
+                && !gameHandler.getCurrentLevel().getTiles().get(position).isGoal()) {
+            playerModel.setPlayerPosition(position);
+            gameHandler.updateMoves();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleUpgradeCollection(Position position, Direction direction) {
+        if (gameHandler.getCurrentLevel().getUpgrades().get(position) != null
+                && (!hasPlayerUpgradeOnDirection(direction) || playerModel.isHasPlaceholder())
+                && !gameHandler.getCurrentLevel().getUpgrades().get(position).equals(Upgrades.NONE)) {
+            collectUpgrade(direction, position);
+            playerModel.setPlayerPosition(position);
+            gameHandler.updateMoves();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleUpgradePush(Position position, Direction direction) {
+        Position upgradePushPosition = calcPositionByPosAndDir(position, direction);
+        if (gameHandler.getCurrentLevel().getUpgrades().get(position) != null
+                && (hasPlayerUpgradeOnDirection(direction)
+                || (!hasPlayerUpgradeOnDirection(direction) && getUpgradeByDirection(direction).equals(Upgrades.NONE)))
+                && !gameHandler.getCurrentLevel().getTiles().get(upgradePushPosition).getTileType().equals(TileType.WALL)
+                && !playerModel.isHasPlaceholder()
+                && gameHandler.getCurrentLevel().getUpgrades().get(upgradePushPosition) == null) {
+            Upgrades removedUpgrade = gameHandler.getCurrentLevel().getUpgrades().remove(position);
+            gameHandler.getCurrentLevel().getUpgrades().put(upgradePushPosition, removedUpgrade);
+            playerModel.setPlayerPosition(position);
+            gameHandler.updateMoves();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleNoneUpgradeCollection(Position position, Direction direction) {
+        if (gameHandler.getCurrentLevel().getUpgrades().get(position) != null
+                && gameHandler.getCurrentLevel().getUpgrades().get(position).equals(Upgrades.NONE)
+                && (hasPlayerUpgradeOnDirection(direction) || playerModel.isHasPlaceholder())) {
+            collectUpgrade(direction, position);
+            playerModel.setPlayerPosition(position);
+            gameHandler.updateMoves();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleGoalTile(Position position) {
+        if (gameHandler.getCurrentLevel().getTiles().get(position).isGoal()) {
+            gameHandler.updateMoves();
+            if (canFinish()) {
+                playerModel.setPlayerPosition(position);
+                gameHandler.finish();
+                return true;
+            }
+            playerModel.setPlayerPosition(position);
+            return true;
+        }
+        return false;
     }
 
     private void collectUpgrade(Direction direction, Position pos) {
@@ -189,7 +196,7 @@ public class PlayerHandler {
             case DOWN -> calculatedPos.y++;
             case RIGHT -> calculatedPos.x++;
             case LEFT -> calculatedPos.x--;
-            default -> throw new RuntimeException("Da ist etwas schiefgelaufen beim Positionsprüfen!!!");
+            default -> throw new RuntimeException("Fehler beim Berechnen der Position!");
         }
         return calculatedPos;
     }
@@ -203,11 +210,6 @@ public class PlayerHandler {
             default -> throw new RuntimeException("Invalides Upgrade!");
         };
     }
-
-    public PlayerModel getPlayerModel() {
-        return playerModel;
-    }
-
     public void setPlayerModel(PlayerModel playerModel) {
         this.playerModel = playerModel;
     }

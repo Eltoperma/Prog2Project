@@ -14,10 +14,5 @@ class GameTimerTask extends TimerTask {
         seconds++;
         System.out.println("Sekunden vergangen: " + seconds);
         gameHandler.updateTimer();
-        // Hier kannst du auch andere Spiel-logik einfügen, die jede Sekunde ausgeführt werden soll.
-    }
-
-    public int getSeconds() {
-        return seconds;
     }
 }

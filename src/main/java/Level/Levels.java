@@ -26,7 +26,6 @@ public class Levels {
         levelList.add(new Level_18());
         levelList.add(new Level_19());
         levelList.add(new Level_20());
-        levelList.add(new Level_Test());
 
        //levels.add(...)
     }

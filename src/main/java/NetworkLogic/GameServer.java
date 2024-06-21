@@ -2,7 +2,6 @@ package NetworkLogic;
 
 import GameLogic.GameController;
 import model.GameModel;
-import model.ModelHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -14,13 +13,10 @@ public class GameServer {
     private GameModel gameModel;
     private ServerSocket serverSocket;
     private List<ObjectOutputStream> clientOutputs;
-    private ModelHandler modelHandler;
-    private int PORT;
+    Socket clientSocket;
 
     public GameServer(int PORT) throws IOException {
-        this.PORT = PORT;
-        serverSocket = new ServerSocket(41337); // Example port
-        clientOutputs = new ArrayList<>();
+        serverSocket = new ServerSocket(PORT);
         new Thread(this::acceptClients).start();
         System.out.println("GameServer started on port " + getPort());
     }
@@ -32,10 +28,9 @@ public class GameServer {
     private void acceptClients() {
         try {
             while (true) {
-                Socket clientSocket = serverSocket.accept();
+                clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-//                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
                 clientOutputs.add(out);
 
                 handleClient(out);
@@ -53,23 +48,18 @@ public class GameServer {
         try {
             while (true) {
                 // Send the current game state to the client
+
                 gameModel = GameController.getGameHandler().getGameModel();
-//                gameModel.setVersion(gameModel.getVersion() + 1);
                 System.out.println("Network GameModel: " + gameModel.getCurrentScore());
 
-                out.writeObject(gameModel);
+                out.writeUnshared(gameModel);
                 out.flush(); // Ensure data is sent immediately
-
-//                GameModel clientGameModel = (GameModel) in.readObject();
-
-
+                out.reset();
                 // Print debug information
                 System.out.println("Server received game model: " + gameModel);
 
-                // Update all clients with the new game model
-                updateAllClients();
 
-                Thread.sleep(1000);
+                Thread.sleep(12);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,18 +68,4 @@ public class GameServer {
         }
     }
 
-    private void updateAllClients() {
-        for (ObjectOutputStream out : clientOutputs) {
-            try {
-                out.writeObject(gameModel);
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setGameModel(GameModel gm) {
-        this.gameModel = gm;
-    }
 }

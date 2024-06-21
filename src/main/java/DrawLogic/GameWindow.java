@@ -62,19 +62,19 @@ public class GameWindow extends JFrame {
                 backgroundMusicPlayer.skipForward();
                 break;
             case KeyEvent.VK_P:
-                GameController.nextGame();
+                GameController.nextLevel();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_O:
-                GameController.lastGame();
+                GameController.recentLevel();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 //gamePanel.resetDrawEngine();
                 break;
             case KeyEvent.VK_R:
-                GameController.resetGame();
+                GameController.resetLevel();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
                 break;
@@ -105,7 +105,7 @@ public class GameWindow extends JFrame {
             System.out.println("TimerStarted");
             if(gamePanel.isAnimationFinished){
                 System.out.println("Condition Met");
-                GameController.nextGame();
+                GameController.nextLevel();
                 gamePanel.refetchPlayer();
                 gamePanel.recalculateDimensions();
             }

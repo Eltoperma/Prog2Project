@@ -4,6 +4,7 @@ import GameLogic.Position;
 import GameLogic.Upgrades;
 import model.GameModel;
 import model.PlayerModel;
+import model.Tile;
 
 
 import javax.swing.*;
@@ -27,11 +28,11 @@ public class DrawPanel extends JPanel {
     private double[] pixeloffset;
     private boolean updatePixeloffset = false;
 
-    DrawPanel(GameModel gameModel) {
+    public DrawPanel(GameModel gameModel) {
         this.gameModel = gameModel;
-        setSize(1000,1000);
+        setSize(1000, 1000);
         playerModel = this.gameModel.getPlayerModel();
-        pixeloffset = new double[]{-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0),0,0};
+        pixeloffset = new double[]{-(tileSize / 6.0) / 2, tileSize - (tileSize / 6.0), 0, 0};
         recalculateDimensions();
         drawEngine(true);
     }
@@ -45,17 +46,20 @@ public class DrawPanel extends JPanel {
     public void refetchPlayer() {
         playerModel = gameModel.getPlayerModel();
     }
-    public void setGameModel(GameModel gameModel){
+
+    public void setGameModel(GameModel gameModel) {
         this.gameModel = gameModel;
     }
-    public void resetDrawEngine(){
+
+    public void resetDrawEngine() {
         drawEngine(false);
         drawEngine(true);
     }
+
     /**
      * <strong>Only call this function on level changes and only when animations are done!</strong>
      */
-    public void recalculateDimensions(){
+    public void recalculateDimensions() {
         gameDimensions = new Dimension(gameModel.getLevelModel().getWidth(), gameModel.getLevelModel().getHeight());
         int width = getWidth();
         int height = getHeight();
@@ -72,13 +76,13 @@ public class DrawPanel extends JPanel {
         pixeloffset[3] = tileSize - (tileSize / 6.0); //breaks animations but is implemented right since this should only really be called on level changes
         updatePixeloffset = true;
     }
-    public boolean movePlayer(Position from, Position to){
+
+    public boolean movePlayer(Position from, Position to) {
         isAnimationFinished = false;
         animatePlayerMovement(from, to);
         playerModel.setPlayerPosition(to);
         return true;
     }
-
 
 
     private Position calculatePixelPos(Position pos) {
@@ -97,8 +101,8 @@ public class DrawPanel extends JPanel {
                 //rainElementAnimation(tiles.get(new Position(x,y)).getImage(),graphics,new Position(x,y),tileSize);
                 if (gameModel.getLevelModel().getUpgrades().get(new Position(x, y)) == null) continue;
                 int shadowOffset = (tileSize - shadowSize) / 2;
-                graphics.drawImage(MapUpgrade.getImage(), x * tileSize + shadowOffset, y * tileSize+ shadowOffset, shadowSize, shadowSize, null); //draw Upgradeshadow
-                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x, y))), x * tileSize  + elementOffset, y * tileSize - objectOffsetFromShadow + upgradeOffset, elementSize, elementSize, null);//draw Upgrade
+                graphics.drawImage(MapUpgrade.getImage(), x * tileSize + shadowOffset, y * tileSize + shadowOffset, shadowSize, shadowSize, null); //draw Upgradeshadow
+                graphics.drawImage(MapUpgrade.getImage(upgrades.get(new Position(x, y))), x * tileSize + elementOffset, y * tileSize - objectOffsetFromShadow + upgradeOffset, elementSize, elementSize, null);//draw Upgrade
             }
         }
         //Draw goals
@@ -111,7 +115,18 @@ public class DrawPanel extends JPanel {
             }
         }
         drawPlayer(graphics, playerPixelPosition, elementSize, elementOffset);
+        drawHighscores(graphics, gameModel.getCurrentScore());
     }
+
+    private void drawHighscores(Graphics g, int score) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        g.drawString(("Score: " + String.valueOf(score)),50, 50);
+//        g.drawString(("Highscore: " + String.valueOf(highscore)),700, 50);
+
+    }
+
+
 
     private void drawPlayer(Graphics graphics, Position pos, int elementSize, int elementOffset) {
 
@@ -151,7 +166,7 @@ public class DrawPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentFrame == animationFrameCount) {
-                    if(playerAnimationTimer.isRunning()){
+                    if (playerAnimationTimer.isRunning()) {
                         playerAnimationTimer.stop();
                         isAnimationFinished = true;
                         refetchPlayer();
@@ -171,16 +186,18 @@ public class DrawPanel extends JPanel {
         });
         playerAnimationTimer.start();
     }
+    //Implementation als Timer hat zu performance-Problemen geführt
     private void drawEngine(boolean start) {
 
         Thread drawThread = new Thread(new Runnable() {
 
             int[] currentStep = {0};
             int[] countBy = {1};
+
             @Override
             public void run() {
                 while (!Thread.currentThread().isInterrupted()) {
-                    if(updatePixeloffset){
+                    if (updatePixeloffset) {
                         pixeloffset[0] = pixeloffset[2];
                         pixeloffset[1] = pixeloffset[3];
                         updatePixeloffset = false;
@@ -191,7 +208,7 @@ public class DrawPanel extends JPanel {
                     if (currentStep[0] <= 75 && currentStep[0] > 0) {
                         pixeloffset[0] *= 1.008;
                         pixeloffset[1] *= 1.0005;
-                    } else if(currentStep[0] >= -75 && currentStep[0] < 0) {
+                    } else if (currentStep[0] >= -75 && currentStep[0] < 0) {
                         pixeloffset[0] *= 0.992;
                         pixeloffset[1] *= 0.9995;
                     }
@@ -212,11 +229,9 @@ public class DrawPanel extends JPanel {
                 }
             }
         });
-        if(!start) drawThread.interrupt();
+        if (!start) drawThread.interrupt();
         drawThread.start();
     }
-
-
 
 
 }
