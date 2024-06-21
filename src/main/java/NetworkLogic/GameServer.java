@@ -1,10 +1,8 @@
 package NetworkLogic;
 
 import GameLogic.GameController;
-import Level.Levels;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import model.GameModel;
+import model.ModelHandler;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -13,14 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameServer {
+    private GameModel gameModel;
     private ServerSocket serverSocket;
-    private List<PrintWriter> clientOutputs;
-    private Gson gson;
+    private List<ObjectOutputStream> clientOutputs;
+    private ModelHandler modelHandler;
+    private int PORT;
 
     public GameServer(int PORT) throws IOException {
-        serverSocket = new ServerSocket(PORT); // Beispiel-Port
+        this.PORT = PORT;
+        serverSocket = new ServerSocket(41337); // Example port
         clientOutputs = new ArrayList<>();
-        gson = new GsonBuilder().create();
         new Thread(this::acceptClients).start();
         System.out.println("GameServer started on port " + getPort());
     }
@@ -34,45 +34,62 @@ public class GameServer {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+//                ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
                 clientOutputs.add(out);
 
-                new Thread(() -> handleClient(out)).start();
+                handleClient(out);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void handleClient(PrintWriter out) {
+    /*
+    Spielstand wird nicht beim Übersenden aktualisiert. Dies geschieht aus nicht bekannten Gründen und auf Ihr Anraten hin schreiben
+    wir diesen Kommentar als Hinweis auf unser Gespräch.
+     */
+    private void handleClient(ObjectOutputStream out) {
         try {
             while (true) {
-                GameModel gameModel = GameController.getGameHandler().getGameModel();
-                String json = gson.toJson(gameModel);
+                // Send the current game state to the client
+                gameModel = GameController.getGameHandler().getGameModel();
+//                gameModel.setVersion(gameModel.getVersion() + 1);
+                System.out.println("Network GameModel: " + gameModel.getCurrentScore());
 
-                out.println(json);
-                out.println("END_OF_MESSAGE"); // Signalisiert das Ende der JSON-Nachricht
-                System.out.println("Gesendeter JSON-String: " + json);
+                out.writeObject(gameModel);
+                out.flush(); // Ensure data is sent immediately
 
-                Thread.sleep(12);
+//                GameModel clientGameModel = (GameModel) in.readObject();
+
+
+                // Print debug information
+                System.out.println("Server received game model: " + gameModel);
+
+                // Update all clients with the new game model
+                updateAllClients();
+
+                Thread.sleep(1000);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private GameModel createDummyGameModel() {
-        // Erzeugt ein Dummy-GameModel-Objekt für das Beispiel
-        GameModel gameModel = new GameModel(Levels.getLevel(0));
-        // Hier das GameModel entsprechend initialisieren
-        return gameModel;
-    }
-
-    public static void main(String[] args) {
-        try {
-            new GameServer(41337);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private void updateAllClients() {
+        for (ObjectOutputStream out : clientOutputs) {
+            try {
+                out.writeObject(gameModel);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setGameModel(GameModel gm) {
+        this.gameModel = gm;
     }
 }

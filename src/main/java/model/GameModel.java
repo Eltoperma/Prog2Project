@@ -15,6 +15,7 @@ public class GameModel implements Serializable {
     private int currentScore;
     private boolean isFinished;
     private final int BASE_SCORE = 10000;
+    private int version = 0;
 
 
     private String username;
@@ -101,5 +102,13 @@ public class GameModel implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
